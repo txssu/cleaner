@@ -1,5 +1,5 @@
 services:
-  database:
+  database_dev:
     image: postgres:latest
     environment:
       POSTGRES_USER: postgres
@@ -7,10 +7,14 @@ services:
       POSTGRES_DB: cleaner_dev
       PGDATA: /data/postgres
     volumes:
-      - postgres:/data/postgres
+      - database_dev:/data/postgres
     restart: unless-stopped
     ports:
       - 5432:5432
 
 volumes:
-  postgres:
+  database_dev:
+
+networks:
+  default:
+    name: "cleaner_dev_default"
