@@ -23,6 +23,7 @@ defmodule Cleaner.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:secret_vault, "~> 1.0"},
       {:credo, "~> 1.7.3", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4.3", only: [:dev, :test], runtime: false},
       {:mix_audit, "~> 2.1.2", only: [:dev, :test], runtime: false},
