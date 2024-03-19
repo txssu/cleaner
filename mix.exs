@@ -29,7 +29,6 @@ defmodule Cleaner.MixProject do
       {:jason, ">= 1.0.0"},
       {:oban, "~> 2.17"},
       {:postgrex, ">= 0.0.0"},
-      {:secret_vault, "~> 1.0"},
       {:credo, "~> 1.7.3", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4.3", only: [:dev, :test], runtime: false},
       {:mix_audit, "~> 2.1.2", only: [:dev, :test], runtime: false},
