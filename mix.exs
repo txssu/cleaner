@@ -27,6 +27,8 @@ defmodule Cleaner.MixProject do
       {:tesla, "~> 1.2"},
       {:hackney, "~> 1.12"},
       {:jason, ">= 1.0.0"},
+      {:oban, "~> 2.17"},
+      {:postgrex, ">= 0.0.0"},
       {:secret_vault, "~> 1.0"},
       {:credo, "~> 1.7.3", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4.3", only: [:dev, :test], runtime: false},
@@ -37,6 +39,7 @@ defmodule Cleaner.MixProject do
 
   defp aliases do
     [
+      "ecto.setup": ["ecto.create", "ecto.migrate"],
       ci: [
         "compile --all-warnings --warnings-as-errors",
         "format --check-formatted",
