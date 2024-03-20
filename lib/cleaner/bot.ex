@@ -30,8 +30,8 @@ defmodule Cleaner.Bot do
     end
   end
 
-  def handle({:message, %{dice: %{emoji: "🎰", value: value}} = message}, %{extra: %{chat_config: chat_config}} = context) do
-    unless winning_dice?(value) do
+  def handle({:message, %{dice: %{emoji: emoji, value: value}} = message}, %{extra: %{chat_config: chat_config}} = context) do
+    unless winning_dice?(emoji, value) do
       schedule_delete(message.chat.id, message.message_id, chat_config.delete_delay_in_seconds)
     end
 
@@ -40,12 +40,16 @@ defmodule Cleaner.Bot do
 
   def handle(_event, context), do: context
 
-  defp winning_dice?(dice_value) do
+  defp winning_dice?("🎰", dice_value) do
     <<right::binary-size(2), center::binary-size(2), left::binary-size(2)>> =
       (dice_value - 1)
       |> Integer.to_string(2)
       |> String.pad_leading(6, "0")
 
     left == center and center == right
+  end
+
+  defp winning_dice?(_emoji, dice_value) do
+    dice_value == 6
   end
 end
