@@ -1,4 +1,4 @@
-defmodule Cleaner.DiceRemover do
+defmodule Cleaner.MessageRemover do
   @moduledoc false
   use Oban.Worker
 

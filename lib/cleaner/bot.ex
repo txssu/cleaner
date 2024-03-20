@@ -2,8 +2,9 @@ defmodule Cleaner.Bot do
   @moduledoc false
   use ExGram.Bot, name: __MODULE__, setup_commands: true
 
+  import Cleaner.BotUtils
+
   alias Cleaner.ChatConfig
-  alias Cleaner.DiceRemover
 
   command("ping", description: "Проверить работает ли бот")
   command("menu", description: "МЕНЮ!!")
@@ -14,7 +15,7 @@ defmodule Cleaner.Bot do
 
   @spec handle(ExGram.Dispatcher.parsed_message(), ExGram.Cnt.t()) :: ExGram.Cnt.t()
   def handle({:command, :ping, _message}, context) do
-    answer(context, "pong")
+    answer_and_delete(context, "pong")
   end
 
   def handle({:command, :menu, _message}, context) do
@@ -23,16 +24,14 @@ defmodule Cleaner.Bot do
 
   def handle({:command, :setdeletedelay, %{text: text}}, %{extra: %{chat_config: chat_config}} = context) do
     case ChatConfig.save(chat_config, %{delete_delay_in_seconds: text}) do
-      {:ok, _chat_config} -> answer(context, "Готово")
-      {:error, _changeset} -> answer(context, "Укажите число больше 3")
+      {:ok, _chat_config} -> answer_and_delete(context, "Готово")
+      {:error, _changeset} -> answer_and_delete(context, "Укажите число больше 3")
     end
   end
 
   def handle({:message, %{dice: %{emoji: "🎰", value: value}} = message}, %{extra: %{chat_config: chat_config}} = context) do
     unless winning_dice?(value) do
-      %{chat_id: message.chat.id, message_id: message.message_id}
-      |> DiceRemover.new(schedule_in: chat_config.delete_delay_in_seconds)
-      |> Oban.insert()
+      schedule_delete(message.chat.id, message.message_id, chat_config.delete_delay_in_seconds)
     end
 
     context
