@@ -20,7 +20,7 @@ defmodule Cleaner.Bot do
   end
 
   def handle({:command, :menu, _message}, context) do
-    answer(context, "/menu")
+    answer_and_delete(context, "/menu")
   end
 
   def handle({:command, :setdeletedelay, %{text: text}}, %{extra: %{chat_config: chat_config, admin?: true}} = context) do
