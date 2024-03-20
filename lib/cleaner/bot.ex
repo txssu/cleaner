@@ -12,6 +12,7 @@ defmodule Cleaner.Bot do
 
   middleware(ExGram.Middleware.IgnoreUsername)
   middleware(Cleaner.Middleware.FetchChat)
+  middleware(Cleaner.Middleware.IsAdmin)
 
   @spec handle(ExGram.Dispatcher.parsed_message(), ExGram.Cnt.t()) :: ExGram.Cnt.t()
   def handle({:command, :ping, _message}, context) do
@@ -22,7 +23,7 @@ defmodule Cleaner.Bot do
     answer(context, "/menu")
   end
 
-  def handle({:command, :setdeletedelay, %{text: text}}, %{extra: %{chat_config: chat_config}} = context) do
+  def handle({:command, :setdeletedelay, %{text: text}}, %{extra: %{chat_config: chat_config, admin?: true}} = context) do
     case ChatConfig.save(chat_config, %{delete_delay_in_seconds: text}) do
       {:ok, _chat_config} -> answer_and_delete(context, "Готово")
       {:error, _changeset} -> answer_and_delete(context, "Укажите число больше 3")
