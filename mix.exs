@@ -40,6 +40,7 @@ defmodule Cleaner.MixProject do
   defp aliases do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate"],
+      "ecto.reset": ["ecto.drop", "ecto.setup"],
       ci: [
         "compile --all-warnings --warnings-as-errors",
         "format --check-formatted",
