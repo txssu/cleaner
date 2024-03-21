@@ -40,7 +40,7 @@ defmodule Cleaner.Bot do
 
   def handle(_event, context), do: context
 
-  defp winning_dice?(%{"emoji" => "🎰", "value" => dice_value}) do
+  defp winning_dice?(%{emoji: "🎰", value: dice_value}) do
     <<right::binary-size(2), center::binary-size(2), left::binary-size(2)>> =
       (dice_value - 1)
       |> Integer.to_string(2)
@@ -56,7 +56,7 @@ defmodule Cleaner.Bot do
     "🏀" => 5
   }
 
-  defp winning_dice?(%{"emoji" => emoji, "value" => dice_value}) do
+  defp winning_dice?(%{emoji: emoji, value: dice_value}) do
     %{^emoji => winning_value} = @winning_value
     winning_value == dice_value
   end
