@@ -57,6 +57,7 @@ defmodule Cleaner.Bot do
   @winning_value %{
     "🎯" => 6,
     "🎳" => 6,
+    "🎲" => 6,
     "⚽" => 5,
     "🏀" => 5
   }
