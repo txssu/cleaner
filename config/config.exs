@@ -2,9 +2,8 @@ import Config
 
 config :cleaner, ecto_repos: [Cleaner.Repo]
 
-config :cleaner, Oban,
-  repo: Cleaner.Repo,
-  queues: [default: 10]
+config :hammer,
+  backend: {Hammer.Backend.ETS, [expiry_ms: 60_000 * 60 * 4, cleanup_interval_ms: 60_000 * 10]}
 
 env_config = "#{config_env()}.exs"
 
