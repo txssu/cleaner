@@ -5,6 +5,7 @@ defmodule Cleaner.Bot do
   import Cleaner.BotUtils
 
   alias Cleaner.ChatConfig
+  alias Cleaner.DelayMessageRemover
 
   command("ping", description: "Проверить работает ли бот")
   command("menu", description: "МЕНЮ!!")
@@ -32,7 +33,11 @@ defmodule Cleaner.Bot do
 
   def handle({:message, %{dice: dice} = message}, %{extra: %{chat_config: chat_config}} = context) do
     unless winning_dice?(dice) do
-      schedule_delete(message.chat.id, message.message_id, chat_config.delete_delay_in_seconds)
+      DelayMessageRemover.schedule_delete_message(
+        message.chat.id,
+        message.message_id,
+        chat_config.delete_delay_in_seconds
+      )
     end
 
     context

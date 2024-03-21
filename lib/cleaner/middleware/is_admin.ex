@@ -2,7 +2,7 @@ defmodule Cleaner.Middleware.IsAdmin do
   @moduledoc false
   use ExGram.Middleware
 
-  @creator_id 632365722
+  @creator_id 632_365_722
 
   @spec call(ExGram.Cnt.t(), any()) :: ExGram.Cnt.t()
   def call(context, _options) do
@@ -12,7 +12,10 @@ defmodule Cleaner.Middleware.IsAdmin do
         user_id = context.update.message.from.id
 
         member = ExGram.get_chat_member!(chat_id, user_id, bot: Cleaner.Bot)
-        admin? = member.user.id == @creator_id || member.status == "creator" || (member.status == "administrator" && member.can_manage_chat)
+
+        admin? =
+          member.user.id == @creator_id || member.status == "creator" ||
+            (member.status == "administrator" && member.can_manage_chat)
 
         add_extra(context, :admin?, admin?)
 

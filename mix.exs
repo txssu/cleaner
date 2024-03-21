@@ -27,7 +27,7 @@ defmodule Cleaner.MixProject do
       {:tesla, "~> 1.2"},
       {:hackney, "~> 1.12"},
       {:jason, ">= 1.0.0"},
-      {:oban, "~> 2.17"},
+      {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
       {:ecto_boot_migration, "~> 0.3.0"},
       {:credo, "~> 1.7.3", only: [:dev, :test], runtime: false},

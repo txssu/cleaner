@@ -15,7 +15,8 @@ defmodule Cleaner.Application do
       Cleaner.Repo,
       ExGram,
       {Cleaner.Bot, [method: :polling, token: token]},
-      {Oban, Application.fetch_env!(@app, Oban)}
+      Cleaner.DelayMessageRemover.ListsSupervisor,
+      {Registry, name: Cleaner.DelayMessageRemover.ListsRegistry, keys: :unique}
     ]
 
     opts = [strategy: :one_for_one, name: Cleaner.Supervisor]
