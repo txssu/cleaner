@@ -14,8 +14,7 @@ defmodule Cleaner.Middleware.IsAdmin do
         member = ExGram.get_chat_member!(chat_id, user_id, bot: Cleaner.Bot)
 
         admin? =
-          member.user.id == @creator_id || member.status == "creator" ||
-            (member.status == "administrator" && member.can_manage_chat)
+          member.user.id == @creator_id || member.status == "creator"
 
         add_extra(context, :admin?, admin?)
 

@@ -13,7 +13,7 @@ defmodule Cleaner.ChatConfig do
 
   schema "chats_configs" do
     field :chat_id, :integer
-    field :delete_delay_in_seconds, :integer, default: 5
+    field :delete_delay_in_seconds, :integer, default: 8
 
     timestamps(type: :utc_datetime)
   end
