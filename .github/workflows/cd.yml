@@ -1,4 +1,4 @@
-name: Create and publish a Docker image
+name: Build and publish a Docker image
 
 on:
   push:
@@ -13,6 +13,7 @@ jobs:
     uses: ./.github/workflows/ci.yml
 
   build-and-push-image:
+    name: Build and publish image
     needs: 
       - run-ci
     runs-on: ubuntu-latest

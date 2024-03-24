@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  check:
+  check-styles:
     name: Check styles
     runs-on: ubuntu-latest
 
@@ -39,10 +39,10 @@ jobs:
       - name: Run style checks
         run: mix ci
 
-  test:
+  run-tests:
     needs:
       - check
-    name: Build and test
+    name: Run tests
     runs-on: ubuntu-latest
     services:
       postgres:
