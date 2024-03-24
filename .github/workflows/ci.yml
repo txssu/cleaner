@@ -41,7 +41,7 @@ jobs:
 
   run-tests:
     needs:
-      - check
+      - check-styles
     name: Run tests
     runs-on: ubuntu-latest
     services:
