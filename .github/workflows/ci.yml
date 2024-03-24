@@ -40,8 +40,6 @@ jobs:
         run: mix ci
 
   run-tests:
-    needs:
-      - check-styles
     name: Run tests
     runs-on: ubuntu-latest
     services:
