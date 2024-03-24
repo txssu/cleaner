@@ -10,7 +10,7 @@ env:
 
 jobs:
   run-ci:
-    uses: ./ci.yml
+    uses: ./ci.yml@main
 
   build-and-push-image:
     needs: 
