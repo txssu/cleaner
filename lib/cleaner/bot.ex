@@ -31,6 +31,10 @@ defmodule Cleaner.Bot do
     end
   end
 
+  def handle({:command, :setdeletedelay, _message}, %{extra: %{admin?: false}} = context) do
+    answer_and_delete(context, "ТОЛЬКА ДЛЯ АДМИНАВ!!!")
+  end
+
   def handle({:message, %{dice: dice} = message}, %{extra: %{chat_config: chat_config}} = context) do
     unless winning_dice?(dice) do
       DelayMessageRemover.schedule_delete_message(
