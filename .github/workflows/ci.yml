@@ -2,8 +2,6 @@ name: Run style check and tests
 
 on:
   workflow_call:
-    inputs:
-    secret:
   push:
     branches: ["main"]
   pull_request:
