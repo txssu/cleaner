@@ -17,6 +17,8 @@ defmodule Cleaner.BotUtils do
     end
   end
 
+  @spec maybe_send_mesage(integer(), String.t(), Keyword.t()) ::
+          {:error, :rate_limit | ExGram.Error.t()} | {:ok, ExGram.Model.Message.t()}
   def maybe_send_mesage(chat_id, text, send_options) do
     case Hammer.check_rate("send_message:#{chat_id}", 60_000, 20) do
       {:allow, _count} ->
