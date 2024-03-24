@@ -10,7 +10,7 @@ env:
 
 jobs:
   run-ci:
-    uses: ${{ github.repository }}/.github/workflows/ci.yml@main
+    uses: ./ci.yml
 
   build-and-push-image:
     needs: 
