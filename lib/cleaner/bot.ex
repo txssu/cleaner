@@ -8,7 +8,8 @@ defmodule Cleaner.Bot do
   alias Cleaner.DelayMessageRemover
 
   command("ping", description: "Проверить работает ли бот")
-  command("menu", description: "МЕНЮ!!")
+  command("help", description: "Вызвать помощь")
+  command("menu", description: "Вызвать меню")
   command("setdeletedelay", description: "Установить задержку перед удалением")
 
   middleware(ExGram.Middleware.IgnoreUsername)
@@ -22,6 +23,17 @@ defmodule Cleaner.Bot do
 
   def handle({:command, :menu, _message}, context) do
     answer_and_delete(context, "/menu")
+  end
+
+  def handle({:command, :help, _message}, context) do
+    help_text = Enum.random([
+      "ПОМГАЮ!!!",
+      "Срочно звоню в 112",
+      "Загугли",
+      "#неосилятор",
+      "У чатгпт спроси"
+    ])
+    answer_and_delete(context, help_text)
   end
 
   def handle({:command, :setdeletedelay, %{text: text}}, %{extra: %{chat_config: chat_config, admin?: true}} = context) do
