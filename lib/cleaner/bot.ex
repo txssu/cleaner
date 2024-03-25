@@ -26,13 +26,15 @@ defmodule Cleaner.Bot do
   end
 
   def handle({:command, :help, _message}, context) do
-    help_text = Enum.random([
-      "ПОМГАЮ!!!",
-      "Срочно звоню в 112",
-      "Загугли",
-      "#неосилятор",
-      "У чатгпт спроси"
-    ])
+    help_text =
+      Enum.random([
+        "ПОМГАЮ!!!",
+        "Срочно звоню в 112",
+        "Загугли",
+        "#неосилятор",
+        "У чатгпт спроси"
+      ])
+
     answer_and_delete(context, help_text)
   end
 
