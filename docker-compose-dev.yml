@@ -12,6 +12,18 @@ services:
     ports:
       - 5432:5432
 
+  app_dev:
+    build:
+      context: .
+    depends_on:
+      - database_dev
+    environment:
+      DATABASE_URL: ecto://postgres:postgres@database_dev/cleaner_dev
+      TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}
+    restart: unless-stopped
+    profiles:
+      - app
+
 volumes:
   database_dev:
 

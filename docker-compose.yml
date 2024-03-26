@@ -11,8 +11,7 @@ services:
     restart: unless-stopped
 
   app:
-    build:
-      context: .
+    image: ghcr.io/txssu/cleaner:latest
     depends_on:
       - database
     environment:
