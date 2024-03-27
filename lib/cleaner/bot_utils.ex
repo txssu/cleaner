@@ -2,6 +2,8 @@ defmodule Cleaner.BotUtils do
   @moduledoc false
   alias Cleaner.DelayMessageRemover
 
+  require Logger
+
   @spec answer_and_delete(ExGram.Cnt.t(), String.t(), Keyword.t()) :: :ok | {:error, ExGram.Error.t()}
   def answer_and_delete(context, text, options \\ []) do
     send_options = Keyword.put(options, :bot, Cleaner.Bot)
@@ -27,5 +29,16 @@ defmodule Cleaner.BotUtils do
       {:deny, _limit} ->
         {:error, :rate_limit}
     end
+  end
+
+  @spec fetch_message(ExGram.Cnt.t()) :: ExGram.Model.Message.t()
+  def fetch_message(context)
+  def fetch_message(%{update: %{message: message}}), do: message
+  def fetch_message(%{update: %{edited_message: message}}), do: message
+
+  def fetch_message(context) do
+    Logger.error("Can't fetch message from:\n#{inspect(context, limit: :infinity, pretty: true)}")
+
+    raise "Can't fetch message from event"
   end
 end
