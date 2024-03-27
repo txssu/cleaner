@@ -1,5 +1,5 @@
 services:
-  database_dev:
+  database:
     image: postgres:latest
     environment:
       POSTGRES_USER: postgres
@@ -7,26 +7,22 @@ services:
       POSTGRES_DB: cleaner_dev
       PGDATA: /data/postgres
     volumes:
-      - database_dev:/data/postgres
+      - database:/data/postgres
     restart: unless-stopped
     ports:
       - 5432:5432
 
-  app_dev:
+  app:
     build:
       context: .
     depends_on:
-      - database_dev
+      - database
     environment:
-      DATABASE_URL: ecto://postgres:postgres@database_dev/cleaner_dev
+      DATABASE_URL: ecto://postgres:postgres@database/cleaner_dev
       TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}
     restart: unless-stopped
     profiles:
       - app
 
 volumes:
-  database_dev:
-
-networks:
-  default:
-    name: "cleaner_dev_default"
+  database:
