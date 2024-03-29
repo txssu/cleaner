@@ -14,6 +14,7 @@ defmodule Cleaner.ChatConfig do
   schema "chats_configs" do
     field :chat_id, :integer
     field :delete_delay_in_seconds, :integer, default: 8
+    field :last_help_message, :string
 
     timestamps(type: :utc_datetime)
   end
@@ -21,7 +22,7 @@ defmodule Cleaner.ChatConfig do
   @spec changeset(t(), map()) :: Ecto.Changeset.t()
   def changeset(chat_config, attrs) do
     chat_config
-    |> cast(attrs, [:delete_delay_in_seconds])
+    |> cast(attrs, [:delete_delay_in_seconds, :last_help_message])
     |> validate_number(:delete_delay_in_seconds, greater_than: 3)
   end
 

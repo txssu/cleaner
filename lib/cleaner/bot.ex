@@ -25,15 +25,20 @@ defmodule Cleaner.Bot do
     answer_and_delete(context, "/menu")
   end
 
-  def handle({:command, :help, _message}, context) do
+  def handle({:command, :help, _message}, %{extra: %{chat_config: chat_config}} = context) do
     help_text =
-      Enum.random([
+      [
         "ПОМГАЮ!!!",
         "Срочно звоню в 112",
         "Загугли",
         "#неосилятор",
         "У чатгпт спроси"
-      ])
+      ]
+      |> Kernel.--([chat_config.last_help_message])
+      |> Enum.random()
+      |> dbg()
+
+    ChatConfig.save(chat_config, %{last_help_message: help_text})
 
     answer_and_delete(context, help_text)
   end
