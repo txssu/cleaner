@@ -30,15 +30,4 @@ defmodule Cleaner.BotUtils do
         {:error, :rate_limit}
     end
   end
-
-  @spec fetch_message(ExGram.Cnt.t()) :: ExGram.Model.Message.t()
-  def fetch_message(context)
-  def fetch_message(%{update: %{message: message}}) when not is_nil(message), do: message
-  def fetch_message(%{update: %{edited_message: message}}) when not is_nil(message), do: message
-
-  def fetch_message(context) do
-    Logger.error("Can't fetch message from:\n#{inspect(context, limit: :infinity, pretty: true)}")
-
-    raise "Can't fetch message from event"
-  end
 end
