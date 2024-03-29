@@ -12,7 +12,7 @@ defmodule Cleaner.BotUtils do
     delay = context.extra.chat_config.delete_delay_in_seconds
     DelayMessageRemover.schedule_delete_message(chat_id, context.update.message.message_id, delay)
 
-    with {:ok, message} = maybe_send_mesage(chat_id, text, send_options) do
+    with {:ok, message} <- maybe_send_mesage(chat_id, text, send_options) do
       DelayMessageRemover.schedule_delete_message(chat_id, message.message_id, delay)
 
       :ok
@@ -27,6 +27,7 @@ defmodule Cleaner.BotUtils do
         ExGram.send_message(chat_id, text, send_options)
 
       {:deny, _limit} ->
+        Logger.warning("Spammer in #{chat_id}")
         {:error, :rate_limit}
     end
   end
