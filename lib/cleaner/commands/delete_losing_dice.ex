@@ -16,11 +16,11 @@ defmodule Cleaner.Commands.DeleteLosingDice do
   @spec call(ChatConfig.t(), ExGram.Model.Message.t(), ExGram.Model.Dice.t()) :: :ok
   def call(chat_config, message, dice) do
     unless winning_dice?(dice) do
-      DelayMessageRemover.schedule_delete_message(
-        Pathex.view!(message, path(:chat / :id, :map)),
-        Pathex.view!(message, path(:message_id, :map)),
-        Pathex.view!(chat_config, path(:delete_delay_in_seconds, :map))
-      )
+      chat_id = Pathex.view!(message, path(:chat / :id, :map))
+      message_id = Pathex.view!(message, path(:message_id, :map))
+      delay_in_seconds = Pathex.view!(chat_config, path(:delete_delay_in_seconds, :map))
+
+      DelayMessageRemover.schedule_delete_message(chat_id, message_id, delay_in_seconds)
     end
 
     :ok
