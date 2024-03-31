@@ -32,6 +32,7 @@ defmodule Cleaner.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:ecto_boot_migration, "~> 0.3.0"},
       {:hammer, "~> 6.1"},
+      {:pathex, "~> 2.5"},
       {:credo, "~> 1.7.3", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4.3", only: [:dev, :test], runtime: false},
       {:mix_audit, "~> 2.1.2", only: [:dev, :test], runtime: false},

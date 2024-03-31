@@ -1,5 +1,7 @@
 defmodule Cleaner.Commands.DeleteLosingDice do
   @moduledoc false
+  use Pathex
+
   alias Cleaner.ChatConfig
   alias Cleaner.DelayMessageRemover
 
@@ -15,9 +17,9 @@ defmodule Cleaner.Commands.DeleteLosingDice do
   def call(chat_config, message, dice) do
     unless winning_dice?(dice) do
       DelayMessageRemover.schedule_delete_message(
-        message.chat.id,
-        message.message_id,
-        chat_config.delete_delay_in_seconds
+        Pathex.view!(message, path(:chat / :id, :map)),
+        Pathex.view!(message, path(:message_id, :map)),
+        Pathex.view!(chat_config, path(:delete_delay_in_seconds, :map))
       )
     end
 
