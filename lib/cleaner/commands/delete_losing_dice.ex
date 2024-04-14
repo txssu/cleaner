@@ -9,8 +9,8 @@ defmodule Cleaner.Commands.DeleteLosingDice do
     "🎯" => 6,
     "🎳" => 6,
     "🎲" => 6,
-    "⚽" => 5,
-    "🏀" => 5
+    "⚽" => 3,
+    "🏀" => 4
   }
 
   @spec call(ChatConfig.t(), ExGram.Model.Message.t(), ExGram.Model.Dice.t()) :: :ok
@@ -37,6 +37,6 @@ defmodule Cleaner.Commands.DeleteLosingDice do
 
   defp winning_dice?(%{emoji: emoji, value: dice_value}) do
     %{^emoji => winning_value} = @winning_values
-    winning_value == dice_value
+    dice_value >= winning_value
   end
 end
