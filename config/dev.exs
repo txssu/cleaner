@@ -9,5 +9,5 @@ config :cleaner, Cleaner.Repo,
   pool_size: 10
 
 config :cleaner, Cleaner.AI.OpenAIClient,
-  api_url: System.fetch_env!("OPENAI_URL"),
-  api_key: System.fetch_env!("OPENAI_KEY")
+  api_url: System.get_env("OPENAI_URL"),
+  api_key: System.get_env("OPENAI_KEY")
