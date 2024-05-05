@@ -10,6 +10,7 @@ defmodule Cleaner.Bot do
   command("help", description: "Вызвать помощь")
   command("menu", description: "Вызвать меню")
   command("setdeletedelay", description: "Установить задержку перед удалением")
+  command("ask", description: "Задать вопрос мудрецу")
 
   middleware(ExGram.Middleware.IgnoreUsername)
   middleware(Cleaner.Middleware.FetchChat)
@@ -32,6 +33,15 @@ defmodule Cleaner.Bot do
   def handle({:command, :setdeletedelay, %{text: text}}, %{extra: %{chat_config: chat_config, admin?: admin?}} = context) do
     text = Commands.SetDeleteDelay.call(chat_config, text, admin?)
     answer_and_delete(context, text)
+  end
+
+  def handle({:command, :ask, %{text: text}}, context) do
+    %{extra: %{admin?: admin?}, update: %{message: %{from: user}}} = context
+
+    case Commands.AskAI.call(user, text, admin?) do
+      {:delete, text} -> answer_and_delete(context, text)
+      {:no_delete, text} -> answer(context, text)
+    end
   end
 
   def handle({:message, %{dice: dice} = message}, %{extra: %{chat_config: chat_config}} = context) do
