@@ -5,6 +5,7 @@ defmodule Cleaner.Commands.AskAI do
 
   require Logger
 
+  @user_prompt_length 300
   @countdown_ms 4 * 60 * 60 * 1000
 
   @system_prompt """
@@ -50,10 +51,12 @@ defmodule Cleaner.Commands.AskAI do
     OpenAIClient.completion(messages)
   end
 
-  defp generate_prompt(name, message) do
+  defp generate_prompt(name, text) do
+    cutted_text = String.slice(text, 0, @user_prompt_length)
+
     [
       OpenAIClient.message("system", @system_prompt),
-      OpenAIClient.message("#{name}: #{message}")
+      OpenAIClient.message("#{name}: #{cutted_text}")
     ]
   end
 
