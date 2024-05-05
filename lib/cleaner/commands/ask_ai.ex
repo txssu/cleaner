@@ -1,6 +1,7 @@
 defmodule Cleaner.Commands.AskAI do
   @moduledoc false
   alias Cleaner.AI.OpenAIClient
+  alias ExGram.Model.User
 
   require Logger
 
@@ -13,6 +14,7 @@ defmodule Cleaner.Commands.AskAI do
   Ты не предлагаешь своей помощи, тебе нет до этого дела.
   """
 
+  @spec call(User.t(), String.t(), boolean()) :: {:no_delete | :delete, String.t()}
   def call(user, text, admin?)
 
   def call(_user, "", _admin?) do
@@ -42,7 +44,7 @@ defmodule Cleaner.Commands.AskAI do
     end
   end
 
-  def send_ai_answer(user, text) do
+  defp send_ai_answer(user, text) do
     messages = generate_prompt(user.first_name, text)
 
     OpenAIClient.completion(messages)

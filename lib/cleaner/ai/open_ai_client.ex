@@ -8,6 +8,9 @@ defmodule Cleaner.AI.OpenAIClient do
   plug(Tesla.Middleware.Headers, [{"authorization", api_key()}])
   plug(Tesla.Middleware.JSON)
 
+  @type message :: %{role: String.t(), content: String.t()}
+
+  @spec completion([message()]) :: {:error, any()} | {:ok, any()}
   def completion(messages) do
     body = %{
       model: "gpt-3.5-turbo-0125",
@@ -21,6 +24,7 @@ defmodule Cleaner.AI.OpenAIClient do
     end
   end
 
+  @spec message(String.t(), String.t()) :: message()
   def message(role \\ "user", content) do
     %{role: role, content: content}
   end
