@@ -6,7 +6,8 @@ defmodule Cleaner.Commands.AskAI do
   require Logger
 
   @user_prompt_length 300
-  @countdown_ms 4 * 60 * 60 * 1000
+  @countdown_ms :timer.hours(4)
+  @rate_limit 5
 
   @system_prompt """
   Ты брутальный мужик. Твоя работа - говночист.
@@ -36,8 +37,10 @@ defmodule Cleaner.Commands.AskAI do
       {:ok, message} ->
         {:no_delete, message}
 
-      {:error, :rate_limit} ->
-        {:delete, "Отстань, я занят!!\n(достигнут лимит запросов)"}
+      {:error, :rate_limit, time_left_ms} ->
+        time_left_hours = time_left_ms / 1000 / 60 / 60
+        formatted_time_left = :erlang.float_to_binary(time_left_hours, [{:decimals, 2}, :compact])
+        {:delete, "Отстань, я занят!!\n(достигнут лимит запросов, попробуй через #{formatted_time_left} ч.)"}
 
       {:error, reason} ->
         Logger.error("Unhandled error: #{inspect(reason)}")
@@ -61,12 +64,17 @@ defmodule Cleaner.Commands.AskAI do
   end
 
   defp if_good_rate(user_id, fun) do
-    case Hammer.check_rate("ask_ai:#{user_id}", @countdown_ms, 5) do
+    id = "ask_ai:#{user_id}"
+
+    case Hammer.check_rate(id, @countdown_ms, @rate_limit) do
       {:allow, _count} ->
         fun.()
 
       {:deny, _limit} ->
-        {:error, :rate_limit}
+        {:ok, bucket} = Hammer.inspect_bucket(id, @countdown_ms, @rate_limit)
+        time_left_ms = elem(bucket, 2)
+
+        {:error, :rate_limit, time_left_ms}
     end
   end
 end
