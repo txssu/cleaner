@@ -11,6 +11,7 @@ defmodule Cleaner.Bot do
   command("menu", description: "Вызвать меню")
   command("setdeletedelay", description: "Установить задержку перед удалением")
   command("ask", description: "Задать вопрос мудрецу")
+  command("insult", description: "Получить порцию оскорблений")
 
   middleware(ExGram.Middleware.IgnoreUsername)
   middleware(Cleaner.Middleware.FetchChat)
@@ -42,6 +43,10 @@ defmodule Cleaner.Bot do
       {:delete, text} -> answer_and_delete(context, text)
       {:no_delete, text} -> answer(context, text)
     end
+  end
+
+  def handle({:command, :insult, _message}, context) do
+    answer(context, Commands.Insult.call())
   end
 
   def handle({:message, %{dice: dice} = message}, %{extra: %{chat_config: chat_config}} = context) do
