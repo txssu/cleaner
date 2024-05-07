@@ -15,6 +15,7 @@ defmodule Cleaner.AI.OpenAIClient do
   def completion(messages) do
     body = %{
       model: "gpt-3.5-turbo-0125",
+      stop: "\n",
       messages: messages
     }
 
