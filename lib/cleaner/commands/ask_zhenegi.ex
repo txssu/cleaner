@@ -7,6 +7,6 @@ defmodule Cleaner.Commands.AskZhenegi do
   end
 
   def call(text) do
-    "@zhenegi спроси это позязя /ask #{text}"
+    "@zhеnеgi спроси это позязя /ask #{text}"
   end
 end
