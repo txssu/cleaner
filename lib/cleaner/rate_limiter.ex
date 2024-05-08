@@ -4,6 +4,7 @@ defmodule Cleaner.RateLimiter do
 
   alias Cleaner.DelayMessageRemover
 
+  @spec call(ExGram.Cnt.t()) :: :ok
   def call(context) do
     chat_id = Pathex.view!(context, path(:update / :message / :chat / :id, :map))
 
