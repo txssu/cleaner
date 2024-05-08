@@ -1,10 +1,12 @@
 defmodule Cleaner.Bot do
   @moduledoc false
   use ExGram.Bot, name: __MODULE__, setup_commands: true
+  use Pathex
 
   import Cleaner.BotUtils
 
   alias Cleaner.Commands
+  alias ExGram.Model.ReplyParameters
 
   command("ping", description: "Проверить работает ли бот")
   command("help", description: "Вызвать помощь")
@@ -51,9 +53,20 @@ defmodule Cleaner.Bot do
     end
   end
 
-  def handle({:command, :insult, _message}, context) do
+  def handle({:command, :insult, message}, context) do
     Cleaner.RateLimiter.call(context)
-    answer(context, Commands.Insult.call())
+
+    case Pathex.view(context, path(:update / :message / :reply_to_message / :message_id, :map)) do
+      {:ok, reply_to} ->
+        text = Commands.Insult.call()
+
+        context
+        |> answer(text, reply_parameters: %ReplyParameters{message_id: reply_to})
+        |> delete(message)
+
+      :error ->
+        answer_and_delete(context, "Используй /insult в ответ на чьё-то сообщение")
+    end
   end
 
   def handle({:command, :ask_zhenegi, %{text: text}}, context) do
