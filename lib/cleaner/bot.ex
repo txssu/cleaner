@@ -71,7 +71,7 @@ defmodule Cleaner.Bot do
 
   def handle({:command, :ask_zhenegi, %{text: text}}, context) do
     Cleaner.RateLimiter.call(context)
-    answer(context, Commands.AskZhenegi.call(text), disable_notification: true)
+    answer(context, Commands.AskZhenegi.call(text))
   end
 
   def handle({:message, %{dice: dice} = message}, %{extra: %{chat_config: chat_config}} = context) do
