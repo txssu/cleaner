@@ -20,24 +20,29 @@ defmodule Cleaner.Bot do
 
   @spec handle(ExGram.Dispatcher.parsed_message(), ExGram.Cnt.t()) :: ExGram.Cnt.t()
   def handle({:command, :ping, _message}, context) do
+    Cleaner.RateLimiter.call(context)
     answer_and_delete(context, "pong")
   end
 
   def handle({:command, :menu, _message}, context) do
+    Cleaner.RateLimiter.call(context)
     answer_and_delete(context, "/menu")
   end
 
   def handle({:command, :help, _message}, %{extra: %{chat_config: chat_config}} = context) do
+    Cleaner.RateLimiter.call(context)
     text = Commands.Help.call(chat_config)
     answer_and_delete(context, text)
   end
 
   def handle({:command, :setdeletedelay, %{text: text}}, %{extra: %{chat_config: chat_config, admin?: admin?}} = context) do
+    Cleaner.RateLimiter.call(context)
     text = Commands.SetDeleteDelay.call(chat_config, text, admin?)
     answer_and_delete(context, text)
   end
 
   def handle({:command, :ask, %{text: text}}, context) do
+    Cleaner.RateLimiter.call(context)
     %{extra: %{admin?: admin?}, update: %{message: %{from: user}}} = context
 
     case Commands.AskAI.call(user, text, admin?) do
@@ -47,10 +52,12 @@ defmodule Cleaner.Bot do
   end
 
   def handle({:command, :insult, _message}, context) do
+    Cleaner.RateLimiter.call(context)
     answer(context, Commands.Insult.call())
   end
 
   def handle({:command, :ask_zhenegi, %{text: text}}, context) do
+    Cleaner.RateLimiter.call(context)
     answer(context, Commands.AskZhenegi.call(text), disable_notification: true)
   end
 
