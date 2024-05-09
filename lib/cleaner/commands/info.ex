@@ -2,6 +2,7 @@ defmodule Cleaner.Commands.Info do
   @moduledoc false
   use Pathex
 
+  @spec call(ExGram.Cnt.t()) :: String.t()
   def call(context) do
     context
     |> get_chat_id()
