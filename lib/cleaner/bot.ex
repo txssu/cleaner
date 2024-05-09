@@ -16,6 +16,7 @@ defmodule Cleaner.Bot do
   command("insult", description: "Получить порцию оскорблений")
   command("ask_zhenegi")
   command("del")
+  command("info")
 
   middleware(ExGram.Middleware.IgnoreUsername)
   middleware(Cleaner.Middleware.FetchChat)
@@ -73,6 +74,16 @@ defmodule Cleaner.Bot do
   def handle({:command, :ask_zhenegi, %{text: text}}, context) do
     Cleaner.RateLimiter.call(context)
     answer(context, Commands.AskZhenegi.call(text))
+  end
+
+  def handle({:command, :info, _message}, context) do
+    admin? = Pathex.view!(context, path(:extra / :admin?))
+
+    if admin? do
+      answer(context, Commands.Info.call(context))
+    else
+      context
+    end
   end
 
   def handle({:command, :del, message}, context) do
