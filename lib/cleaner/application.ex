@@ -12,6 +12,7 @@ defmodule Cleaner.Application do
     token = Application.fetch_env!(@app, Cleaner.Bot)[:telegram_token]
 
     children = [
+      Cleaner.Scheduler,
       Cleaner.Repo,
       ExGram,
       {Cleaner.Bot, [method: :polling, token: token]},

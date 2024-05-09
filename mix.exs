@@ -33,6 +33,7 @@ defmodule Cleaner.MixProject do
       {:ecto_boot_migration, "~> 0.3.0"},
       {:hammer, "~> 6.1"},
       {:pathex, "~> 2.5"},
+      {:quantum, "~> 3.0"},
       {:insult_generator, github: "txssu/insult_generator"},
       {:credo, "~> 1.7.3", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4.3", only: [:dev, :test], runtime: false},

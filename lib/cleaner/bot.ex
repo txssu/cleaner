@@ -100,6 +100,25 @@ defmodule Cleaner.Bot do
     end
   end
 
+  def handle({:callback_query, callback_query}, context) do
+    dbg(callback_query)
+    user_id = Pathex.view!(callback_query, path(:from / :id, :map))
+    answer = Pathex.view!(callback_query, path(:data, :map))
+    message = Pathex.view!(callback_query, path(:message, :map))
+
+    context = answer_callback(context, callback_query)
+
+    case Commands.NikitaCounter.call(user_id, answer) do
+      :ignore ->
+        context
+
+      {:answer, text} ->
+        context
+        |> edit(:inline, "#{message.text}\nОтвет дан.")
+        |> answer(text, reply_parameters: %ReplyParameters{message_id: message.message_id})
+    end
+  end
+
   def handle({:message, %{dice: dice} = message}, %{extra: %{chat_config: chat_config}} = context) do
     Commands.DeleteLosingDice.call(chat_config, message, dice)
 
