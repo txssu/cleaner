@@ -12,6 +12,7 @@ defmodule Cleaner.Bot do
   command("help", description: "Вызвать помощь")
   command("menu", description: "Вызвать меню")
   command("setdeletedelay", description: "Установить задержку перед удалением")
+  command("setaiprompt", description: "Установить промпт для /ask")
   command("ask", description: "Задать вопрос мудрецу")
   command("insult", description: "Получить порцию оскорблений")
   command("ask_zhenegi")
@@ -42,6 +43,12 @@ defmodule Cleaner.Bot do
   def handle({:command, :setdeletedelay, %{text: text}}, %{extra: %{chat_config: chat_config, admin?: admin?}} = context) do
     Cleaner.RateLimiter.call(context)
     text = Commands.SetDeleteDelay.call(chat_config, text, admin?)
+    answer_and_delete(context, text)
+  end
+
+  def handle({:command, :setaiprompt, %{text: text}}, %{extra: %{chat_config: chat_config, admin?: admin?}} = context) do
+    Cleaner.RateLimiter.call(context)
+    text = Commands.SetAIPrompt.call(chat_config, text, admin?)
     answer_and_delete(context, text)
   end
 

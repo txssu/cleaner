@@ -15,6 +15,7 @@ defmodule Cleaner.ChatConfig do
     field :chat_id, :integer
     field :delete_delay_in_seconds, :integer, default: 8
     field :last_help_message, :string
+    field :ai_prompt, :string
 
     timestamps(type: :utc_datetime)
   end
