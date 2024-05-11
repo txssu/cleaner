@@ -7,7 +7,7 @@ defmodule Cleaner.Middleware.IsAdmin do
 
   @spec call(ExGram.Cnt.t(), any()) :: ExGram.Cnt.t()
   def call(%{update: %{message: message}} = context, _options) when not is_nil(message) do
-    entities = Pathex.view!(message, path(:entities, :map))
+    entities = Pathex.view!(message, path(:entities, :map)) || []
 
     if Enum.any?(entities, &(&1.type == "bot_command")) do
       chat_id = Pathex.view!(message, path(:chat / :id, :map))
