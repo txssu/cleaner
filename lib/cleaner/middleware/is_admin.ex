@@ -7,21 +7,21 @@ defmodule Cleaner.Middleware.IsAdmin do
 
   @spec call(ExGram.Cnt.t(), any()) :: ExGram.Cnt.t()
   def call(%{update: %{message: message}} = context, _options) when not is_nil(message) do
-    case Pathex.view!(message, path(:entities, :map)) do
-      [%{type: "bot_command"}] ->
-        chat_id = Pathex.view!(message, path(:chat / :id, :map))
-        user_id = Pathex.view!(message, path(:from / :id, :map))
+    entities = Pathex.view!(message, path(:entities, :map))
 
-        member = ExGram.get_chat_member!(chat_id, user_id, bot: Cleaner.Bot)
-        member_id = Pathex.view!(member, path(:user / :id, :map))
-        member_status = Pathex.view!(member, path(:status, :map))
+    if Enum.any?(entities, &(&1.type == "bot_command")) do
+      chat_id = Pathex.view!(message, path(:chat / :id, :map))
+      user_id = Pathex.view!(message, path(:from / :id, :map))
 
-        admin? = member_id == @creator_id || member_status == "creator"
+      member = ExGram.get_chat_member!(chat_id, user_id, bot: Cleaner.Bot)
+      member_id = Pathex.view!(member, path(:user / :id, :map))
+      member_status = Pathex.view!(member, path(:status, :map))
 
-        add_extra(context, :admin?, admin?)
+      admin? = member_id == @creator_id || member_status == "creator"
 
-      _otherwise ->
-        add_extra(context, :admin?, nil)
+      add_extra(context, :admin?, admin?)
+    else
+      add_extra(context, :admin?, nil)
     end
   end
 
