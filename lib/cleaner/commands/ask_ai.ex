@@ -9,7 +9,7 @@ defmodule Cleaner.Commands.AskAI do
   @countdown_ms :timer.hours(4)
   @rate_limit 5
 
-  @system_prompt """
+  @default_system_prompt """
   You only reply in plain text format.
   You're an entertaining chat bot.
   You play a brutal man who works as a shit cleaner.
@@ -20,15 +20,15 @@ defmodule Cleaner.Commands.AskAI do
   You answer only in Russian.
   """
 
-  @spec call(User.t(), String.t(), boolean()) :: {:no_delete | :delete, String.t()}
-  def call(user, text, admin?)
+  @spec call(User.t(), String.t(), String.t(), boolean()) :: {:no_delete | :delete, String.t()}
+  def call(user, text, prompt, admin?)
 
-  def call(_user, "", _admin?) do
+  def call(_user, "", _prompt, _admin?) do
     {:delete, "Используй: /ask текст-вопроса"}
   end
 
-  def call(user, text, admin?) do
-    fun = fn -> send_ai_answer(user, text) end
+  def call(user, text, prompt, admin?) do
+    fun = fn -> send_ai_answer(user, text, prompt) end
 
     result =
       if admin? do
@@ -52,17 +52,17 @@ defmodule Cleaner.Commands.AskAI do
     end
   end
 
-  defp send_ai_answer(user, text) do
-    messages = generate_prompt(user.first_name, text)
+  defp send_ai_answer(user, text, prompt) do
+    messages = generate_prompt(user.first_name, text, prompt)
 
     OpenAIClient.completion(messages)
   end
 
-  defp generate_prompt(name, text) do
+  defp generate_prompt(name, text, prompt) do
     cutted_text = String.slice(text, 0, @user_prompt_length)
 
     [
-      OpenAIClient.message("system", @system_prompt),
+      OpenAIClient.message("system", prompt || @default_system_prompt),
       OpenAIClient.message("#{name}: #{cutted_text}")
     ]
   end

@@ -54,9 +54,9 @@ defmodule Cleaner.Bot do
 
   def handle({:command, :ask, %{text: text}}, context) do
     Cleaner.RateLimiter.call(context)
-    %{extra: %{admin?: admin?}, update: %{message: %{from: user}}} = context
+    %{extra: %{admin?: admin?, chat_config: %{ai_prompt: prompt}}, update: %{message: %{from: user}}} = context
 
-    case Commands.AskAI.call(user, text, admin?) do
+    case Commands.AskAI.call(user, text, prompt, admin?) do
       {:delete, text} -> answer_and_delete(context, text)
       {:no_delete, text} -> answer(context, text)
     end
