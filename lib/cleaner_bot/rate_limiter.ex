@@ -1,4 +1,4 @@
-defmodule Cleaner.RateLimiter do
+defmodule CleanerBot.RateLimiter do
   @moduledoc false
   use Pathex
 

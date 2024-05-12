@@ -1,4 +1,4 @@
-defmodule Cleaner.Commands.SetDeleteDelay do
+defmodule CleanerBot.Commands.SetDeleteDelay do
   @moduledoc false
   use Pathex
 

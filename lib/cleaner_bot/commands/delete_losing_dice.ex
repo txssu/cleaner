@@ -1,4 +1,4 @@
-defmodule Cleaner.Commands.DeleteLosingDice do
+defmodule CleanerBot.Commands.DeleteLosingDice do
   @moduledoc false
   use Pathex
 

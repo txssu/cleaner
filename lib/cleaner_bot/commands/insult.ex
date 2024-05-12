@@ -1,4 +1,4 @@
-defmodule Cleaner.Commands.Insult do
+defmodule CleanerBot.Commands.Insult do
   @moduledoc false
 
   @spec call() :: String.t()

@@ -1,6 +1,6 @@
 import Config
 
-config :cleaner, Cleaner.Bot, telegram_token: System.get_env("TELEGRAM_TOKEN")
+config :cleaner, CleanerBot.Dispatcher, telegram_token: System.get_env("TELEGRAM_TOKEN")
 
 if config_env() == :prod do
   config :cleaner, Cleaner.Repo,

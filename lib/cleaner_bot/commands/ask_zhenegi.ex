@@ -1,4 +1,4 @@
-defmodule Cleaner.Commands.AskZhenegi do
+defmodule CleanerBot.Commands.AskZhenegi do
   @moduledoc false
 
   @spec call(String.t()) :: String.t()

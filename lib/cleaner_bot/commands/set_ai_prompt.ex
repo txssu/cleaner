@@ -1,4 +1,4 @@
-defmodule Cleaner.Commands.SetAIPrompt do
+defmodule CleanerBot.Commands.SetAIPrompt do
   @moduledoc false
   use Pathex
 

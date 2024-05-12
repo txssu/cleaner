@@ -1,4 +1,4 @@
-defmodule Cleaner.Commands.AskAI do
+defmodule CleanerBot.Commands.AskAI do
   @moduledoc false
   alias Cleaner.AI.OpenAIClient
   alias ExGram.Model.User

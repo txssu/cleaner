@@ -1,4 +1,4 @@
-defmodule Cleaner.Middleware.IsAdmin do
+defmodule CleanerBot.Middleware.IsAdmin do
   @moduledoc false
   use ExGram.Middleware
   use Pathex
@@ -13,7 +13,7 @@ defmodule Cleaner.Middleware.IsAdmin do
       chat_id = Pathex.view!(message, path(:chat / :id, :map))
       user_id = Pathex.view!(message, path(:from / :id, :map))
 
-      member = ExGram.get_chat_member!(chat_id, user_id, bot: Cleaner.Bot)
+      member = ExGram.get_chat_member!(chat_id, user_id, bot: CleanerBot.Dispatcher)
       member_id = Pathex.view!(member, path(:user / :id, :map))
       member_status = Pathex.view!(member, path(:status, :map))
 

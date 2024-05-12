@@ -1,4 +1,4 @@
-defmodule Cleaner.BotUtils do
+defmodule CleanerBot.Utils do
   @moduledoc false
   use Pathex
 
@@ -8,7 +8,7 @@ defmodule Cleaner.BotUtils do
 
   @spec answer_and_delete(ExGram.Cnt.t(), String.t(), Keyword.t()) :: :ok | {:error, ExGram.Error.t()}
   def answer_and_delete(context, text, options \\ []) do
-    send_options = Keyword.put(options, :bot, Cleaner.Bot)
+    send_options = Keyword.put(options, :bot, CleanerBot.Dispatcher)
 
     chat_id = Pathex.view!(context, path(:update / :message / :chat / :id, :map))
     message_id = Pathex.view!(context, path(:update / :message / :message_id, :map))

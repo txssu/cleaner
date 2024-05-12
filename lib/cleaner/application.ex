@@ -9,13 +9,13 @@ defmodule Cleaner.Application do
   def start(_type, _args) do
     {:ok, _} = EctoBootMigration.migrate(@app)
 
-    token = Application.fetch_env!(@app, Cleaner.Bot)[:telegram_token]
+    token = Application.fetch_env!(@app, CleanerBot.Dispatcher)[:telegram_token]
 
     children = [
       Cleaner.Scheduler,
       Cleaner.Repo,
       ExGram,
-      {Cleaner.Bot, [method: :polling, token: token]},
+      {CleanerBot.Dispatcher, [method: :polling, token: token]},
       Cleaner.DelayMessageRemover.ListsSupervisor,
       {Registry, name: Cleaner.DelayMessageRemover.ListsRegistry, keys: :unique}
     ]

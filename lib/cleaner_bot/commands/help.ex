@@ -1,4 +1,4 @@
-defmodule Cleaner.Commands.Help do
+defmodule CleanerBot.Commands.Help do
   @moduledoc false
 
   use Pathex

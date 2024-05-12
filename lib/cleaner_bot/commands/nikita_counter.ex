@@ -1,4 +1,4 @@
-defmodule Cleaner.Commands.NikitaCounter do
+defmodule CleanerBot.Commands.NikitaCounter do
   @moduledoc false
 
   import ExGram.Dsl.Keyboard
@@ -22,7 +22,7 @@ defmodule Cleaner.Commands.NikitaCounter do
     ExGram.send_message(@chat_id, "[Никита](tg://user?id=#{@user_id}), ты сегодня занялся сексом?",
       reply_markup: markup,
       parse_mode: "MarkdownV2",
-      bot: Cleaner.Bot
+      bot: CleanerBot.Dispatcher
     )
   end
 
