@@ -20,8 +20,8 @@ defmodule CleanerBot.Dispatcher do
   command("info")
 
   middleware(ExGram.Middleware.IgnoreUsername)
-  middleware(CleanerBot.Middleware.FetchChat)
-  middleware(CleanerBot.Middleware.IsAdmin)
+  middleware(CleanerBot.Middlewares.FetchChat)
+  middleware(CleanerBot.Middlewares.IsAdmin)
 
   @spec handle(ExGram.Dispatcher.parsed_message(), ExGram.Cnt.t()) :: ExGram.Cnt.t()
   def handle({:command, :ping, _message}, context) do

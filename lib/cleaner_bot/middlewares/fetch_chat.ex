@@ -1,4 +1,4 @@
-defmodule CleanerBot.Middleware.FetchChat do
+defmodule CleanerBot.Middlewares.FetchChat do
   @moduledoc false
   use ExGram.Middleware
   use Pathex

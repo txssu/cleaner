@@ -1,4 +1,4 @@
-defmodule CleanerBot.Middleware.IsAdmin do
+defmodule CleanerBot.Middlewares.IsAdmin do
   @moduledoc false
   use ExGram.Middleware
   use Pathex
