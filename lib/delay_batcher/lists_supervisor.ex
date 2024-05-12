@@ -1,12 +1,12 @@
-defmodule Cleaner.DelayMessageRemover.ListsSupervisor do
+defmodule DelayBatcher.ListsSupervisor do
   @moduledoc false
   use DynamicSupervisor
 
-  alias Cleaner.DelayMessageRemover.DeleteList
+  alias DelayBatcher.List
 
   @spec start_child(Keyword.t()) :: Supervisor.on_start_child()
   def start_child(arguments) do
-    DynamicSupervisor.start_child(__MODULE__, {DeleteList, arguments})
+    DynamicSupervisor.start_child(__MODULE__, {List, arguments})
   end
 
   @spec start_link(any()) :: Supervisor.on_start()

@@ -3,7 +3,7 @@ defmodule CleanerBot.Commands.DeleteLosingDice do
   use Pathex
 
   alias Cleaner.ChatConfig
-  alias Cleaner.DelayMessageRemover
+  alias CleanerBot.DelayMessageRemover
 
   @winning_values %{
     "🎯" => 6,

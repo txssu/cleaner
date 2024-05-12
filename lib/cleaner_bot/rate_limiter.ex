@@ -2,7 +2,7 @@ defmodule CleanerBot.RateLimiter do
   @moduledoc false
   use Pathex
 
-  alias Cleaner.DelayMessageRemover
+  alias CleanerBot.DelayMessageRemover
 
   @spec call(ExGram.Cnt.t()) :: :ok
   def call(context) do

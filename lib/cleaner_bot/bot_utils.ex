@@ -2,7 +2,7 @@ defmodule CleanerBot.Utils do
   @moduledoc false
   use Pathex
 
-  alias Cleaner.DelayMessageRemover
+  alias CleanerBot.DelayMessageRemover
 
   require Logger
 

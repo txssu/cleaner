@@ -14,10 +14,9 @@ defmodule Cleaner.Application do
     children = [
       Cleaner.Scheduler,
       Cleaner.Repo,
+      DelayBatcher.Supervisor,
       ExGram,
-      {CleanerBot.Dispatcher, [method: :polling, token: token]},
-      Cleaner.DelayMessageRemover.ListsSupervisor,
-      {Registry, name: Cleaner.DelayMessageRemover.ListsRegistry, keys: :unique}
+      {CleanerBot.Dispatcher, [method: :polling, token: token]}
     ]
 
     opts = [strategy: :one_for_one, name: Cleaner.Supervisor]
