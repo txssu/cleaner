@@ -15,6 +15,7 @@ defmodule CleanerBot.Dispatcher do
   command("setaiprompt", description: "Установить промпт для /ask")
   command("ask", description: "Задать вопрос мудрецу")
   command("insult", description: "Получить порцию оскорблений")
+  command("privacy", description: "Политика конфиденциальности")
   command("ask_zhenegi")
   command("del")
   command("info")
@@ -32,6 +33,18 @@ defmodule CleanerBot.Dispatcher do
   def handle({:command, :menu, _message}, context) do
     CleanerBot.RateLimiter.call(context)
     answer_and_delete(context, "/menu")
+  end
+
+  def handle({:command, :privacy, _message}, context) do
+    CleanerBot.RateLimiter.call(context)
+
+    answer_and_delete(context, """
+    Используя данного бота, вы автоматически соглашаетесь с тем, что:
+    1. Сбор данных: Мы можем собирать любые данные, которые вы предоставляете в рамках использования данного бота.
+    2. Хранение данных: Все собранные данные могут храниться в течение 50 лет с момента их получения.
+    3. Использование данных: Мы можем использовать собранные данные для любых целей.
+    4. Согласие: Использование данного бота означает ваше автоматическое согласие с данной Политикой конфиденциальности.
+    """)
   end
 
   def handle({:command, :help, _message}, %{extra: %{chat_config: chat_config}} = context) do
