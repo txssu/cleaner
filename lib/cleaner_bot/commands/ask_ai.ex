@@ -5,10 +5,6 @@ defmodule CleanerBot.Commands.AskAI do
 
   require Logger
 
-  @user_prompt_length 300
-  @countdown_ms :timer.hours(4)
-  @rate_limit 5
-
   @default_system_prompt """
   You only reply in plain text format.
   You're an entertaining chat bot.
@@ -20,21 +16,21 @@ defmodule CleanerBot.Commands.AskAI do
   You answer only in Russian.
   """
 
-  @spec call(User.t(), String.t(), String.t(), boolean()) :: {:no_delete | :delete, String.t()}
-  def call(user, text, prompt, admin?)
+  @spec call(User.t(), String.t(), String.t(), boolean(), String.t()) :: {:no_delete | :delete, String.t()}
+  def call(user, text, prompt, admin?, model)
 
-  def call(_user, "", _prompt, _admin?) do
+  def call(_user, "", _prompt, _admin?, _model) do
     {:delete, "Используй: /ask текст-вопроса"}
   end
 
-  def call(user, text, prompt, admin?) do
-    fun = fn -> send_ai_answer(user, text, prompt) end
+  def call(user, text, prompt, admin?, model) do
+    fun = fn -> send_ai_answer(user, text, prompt, model) end
 
     result =
       if admin? do
         fun.()
       else
-        if_good_rate(user.id, fun)
+        if_good_rate(user.id, model, fun)
       end
 
     case result do
@@ -52,30 +48,34 @@ defmodule CleanerBot.Commands.AskAI do
     end
   end
 
-  defp send_ai_answer(user, text, prompt) do
+  defp send_ai_answer(user, text, prompt, model) do
     messages = generate_prompt(user.first_name, text, prompt)
 
-    OpenAIClient.completion(messages)
+    OpenAIClient.completion(messages, model: model)
   end
 
   defp generate_prompt(name, text, prompt) do
-    cutted_text = String.slice(text, 0, @user_prompt_length)
-
     [
       OpenAIClient.message("system", prompt || @default_system_prompt),
-      OpenAIClient.message("#{name}: #{cutted_text}")
+      OpenAIClient.message("#{name}: #{text}")
     ]
   end
 
-  defp if_good_rate(user_id, fun) do
+  defp if_good_rate(user_id, model, fun) do
     id = "ask_ai:#{user_id}"
 
-    case Hammer.check_rate(id, @countdown_ms, @rate_limit) do
+    {countdown_ms, rate_limit} =
+      case model do
+        "gpt-3.5-turbo-0125" -> {:timer.hours(4), 5}
+        "gpt-4o" -> {:timer.hours(22), 2}
+      end
+
+    case Hammer.check_rate(id, countdown_ms, rate_limit) do
       {:allow, _count} ->
         fun.()
 
       {:deny, _limit} ->
-        {:ok, bucket} = Hammer.inspect_bucket(id, @countdown_ms, @rate_limit)
+        {:ok, bucket} = Hammer.inspect_bucket(id, countdown_ms, rate_limit)
         time_left_ms = elem(bucket, 2)
 
         {:error, :rate_limit, time_left_ms}

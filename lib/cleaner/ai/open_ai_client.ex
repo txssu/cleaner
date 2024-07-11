@@ -11,10 +11,12 @@ defmodule Cleaner.AI.OpenAIClient do
 
   @type message :: %{role: String.t(), content: String.t()}
 
-  @spec completion([message()]) :: {:error, any()} | {:ok, any()}
-  def completion(messages) do
+  @spec completion([message()], Keyword.t()) :: {:error, any()} | {:ok, any()}
+  def completion(messages, options \\ []) do
+    model = Keyword.get(options, :model, "gpt-3.5-turbo-0125")
+
     body = %{
-      model: "gpt-3.5-turbo-0125",
+      model: model,
       messages: messages
     }
 

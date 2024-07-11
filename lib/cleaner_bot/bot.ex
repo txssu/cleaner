@@ -14,6 +14,7 @@ defmodule CleanerBot.Dispatcher do
   command("setdeletedelay", description: "Установить задержку перед удалением")
   command("setaiprompt", description: "Установить промпт для /ask")
   command("ask", description: "Задать вопрос мудрецу")
+  command("ask4o", description: "Задать вопрос НАСТОЯЩЕМУ мудрецу")
   command("insult", description: "Получить порцию оскорблений")
   command("privacy", description: "Политика конфиденциальности")
   command("ask_zhenegi")
@@ -65,11 +66,17 @@ defmodule CleanerBot.Dispatcher do
     answer_and_delete(context, text)
   end
 
-  def handle({:command, :ask, %{text: text}}, context) do
+  def handle({:command, command, %{text: text}}, context) when command in [:ask, :ask4o] do
     CleanerBot.RateLimiter.call(context)
     %{extra: %{admin?: admin?, chat_config: %{ai_prompt: prompt}}, update: %{message: %{from: user}}} = context
 
-    case Commands.AskAI.call(user, text, prompt, admin?) do
+    model =
+      case command do
+        :ask -> "gpt-3.5-turbo-0125"
+        :ask4o -> "gpt-4o"
+      end
+
+    case Commands.AskAI.call(user, text, prompt, admin?, model) do
       {:delete, text} -> answer_and_delete(context, text)
       {:no_delete, text} -> answer(context, text)
     end
