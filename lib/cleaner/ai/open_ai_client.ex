@@ -13,7 +13,7 @@ defmodule Cleaner.AI.OpenAIClient do
 
   @spec completion([message()], Keyword.t()) :: {:error, any()} | {:ok, any()}
   def completion(messages, options \\ []) do
-    model = Keyword.get(options, :model, "gpt-3.5-turbo-0125")
+    model = Keyword.get(options, :model, "gpt-4o-mini")
 
     body = %{
       model: model,
