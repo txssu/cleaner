@@ -17,7 +17,6 @@ defmodule CleanerBot.Dispatcher do
   command("ask4o", description: "Задать вопрос НАСТОЯЩЕМУ мудрецу")
   command("insult", description: "Получить порцию оскорблений")
   command("privacy", description: "Политика конфиденциальности")
-  command("ask_zhenegi")
   command("del")
   command("info")
 
@@ -96,11 +95,6 @@ defmodule CleanerBot.Dispatcher do
       :error ->
         answer_and_delete(context, "Используй /insult в ответ на чьё-то сообщение")
     end
-  end
-
-  def handle({:command, :ask_zhenegi, %{text: text}}, context) do
-    CleanerBot.RateLimiter.call(context)
-    answer(context, Commands.AskZhenegi.call(text))
   end
 
   def handle({:command, :info, _message}, context) do
