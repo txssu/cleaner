@@ -133,7 +133,8 @@ defmodule CleanerBot.Dispatcher do
     end
   end
 
-  def handle({:message, %{dice: dice} = message}, %{extra: %{chat_config: chat_config}} = context) do
+  def handle({:message, %{dice: dice} = message}, %{extra: %{chat_config: chat_config}} = context)
+      when not is_nil(dice) do
     Commands.DeleteLosingDice.call(chat_config, message, dice)
 
     context
