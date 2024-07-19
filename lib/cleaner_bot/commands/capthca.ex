@@ -10,10 +10,10 @@ defmodule CleanerBot.Commands.Capthca do
     {answer, capthca_text} = generate_capthca()
 
     text = """
-    #{mention}, у тебя ровно одна минута, чтобы решить капчу-пример:
+    #{mention}, у тебя ровно одна минута, чтобы решить капчу:
     #{capthca_text}
 
-    Если ты отправишь что-то кроме ответа на капчу, я кикну тебя из чата.
+    Если ты отправишь что\\-то кроме ответа на капчу, я кикну тебя из чата\\.
     """
 
     ExGram.send_message!(chat_id, text, parse_mode: "MarkdownV2", bot: CleanerBot.Dispatcher)
