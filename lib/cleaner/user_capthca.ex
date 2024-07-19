@@ -4,4 +4,10 @@ defmodule Cleaner.UserCapthca do
 
   @enforce_keys @keys
   defstruct @keys
+
+  @type t :: %__MODULE__{
+          chat_id: integer(),
+          user_id: integer(),
+          answer: String.t()
+        }
 end

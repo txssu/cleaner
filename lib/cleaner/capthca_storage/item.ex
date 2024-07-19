@@ -10,6 +10,7 @@ defmodule Cleaner.CapthcaStorage.Item do
     GenServer.start_link(__MODULE__, user_capcha)
   end
 
+  @spec check(pid(), String.t()) :: :ok
   def check(pid, text) do
     GenServer.cast(pid, {:check, text})
   end
@@ -36,7 +37,7 @@ defmodule Cleaner.CapthcaStorage.Item do
     close(user_capcha)
   end
 
-  def close(%UserCapthca{} = user_capcha) do
+  defp close(%UserCapthca{} = user_capcha) do
     ExGram.send_message(user_capcha.chat_id, "Кик ботяру", bot: CleanerBot.Dispatcher)
     ExGram.ban_chat_member(user_capcha.chat_id, user_capcha.user_id, bot: CleanerBot.Dispatcher)
 

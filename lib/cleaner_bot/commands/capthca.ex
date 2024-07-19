@@ -1,6 +1,8 @@
 defmodule CleanerBot.Commands.Capthca do
   @moduledoc false
 
+  @spec call(context, ExGram.Model.User.t()) :: context
+        when context: ExGram.Cnt.t()
   def call(context, %ExGram.Model.User{} = new_member) do
     chat_id = context.update.message.chat.id
 
@@ -27,9 +29,13 @@ defmodule CleanerBot.Commands.Capthca do
     context
   end
 
+  @spec check(ExGram.Model.User.t(), ExGram.Model.Message.t(), context) :: context
+        when context: ExGram.Cnt.t()
   def check(%ExGram.Model.User{} = user, %ExGram.Model.Message{} = message, context) do
     chat_id = context.update.message.chat.id
     Cleaner.CapthcaStorage.check(chat_id, user.id, message.text)
+
+    context
   end
 
   defp generate_capthca do
