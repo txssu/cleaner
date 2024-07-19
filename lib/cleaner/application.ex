@@ -16,7 +16,9 @@ defmodule Cleaner.Application do
       Cleaner.Repo,
       DelayBatcher.Supervisor,
       ExGram,
-      {CleanerBot.Dispatcher, [method: :polling, token: token]}
+      {CleanerBot.Dispatcher, [method: :polling, token: token]},
+      Cleaner.CapthcaStorage.DynamicSupervisor,
+      {Registry, name: Cleaner.CapthcaStorage.Registry, keys: :unique}
     ]
 
     opts = [strategy: :one_for_one, name: Cleaner.Supervisor]

@@ -28,8 +28,6 @@ defmodule CleanerBot.Commands.NikitaCounter do
 
   @spec call(integer(), String.t()) :: :ignore | {:answer, String.t()}
   def call(user_id, answer) do
-    dbg(user_id)
-
     if user_id == @user_id do
       {:answer, handle_answer(answer)}
     else

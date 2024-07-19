@@ -24,6 +24,12 @@ defmodule CleanerBot.Dispatcher do
   middleware(CleanerBot.Middlewares.IsAdmin)
 
   @spec handle(ExGram.Dispatcher.parsed_message(), ExGram.Cnt.t()) :: ExGram.Cnt.t()
+  def handle({:text, _text, %ExGram.Model.Message{} = message}, context) do
+    if user = message.from do
+      Commands.Capthca.check(user, message, context)
+    end
+  end
+
   def handle({:command, :ping, _message}, context) do
     CleanerBot.RateLimiter.call(context)
     answer_and_delete(context, "pong")
@@ -115,7 +121,6 @@ defmodule CleanerBot.Dispatcher do
   end
 
   def handle({:callback_query, callback_query}, context) do
-    dbg(callback_query)
     user_id = Pathex.view!(callback_query, path(:from / :id, :map))
     answer = Pathex.view!(callback_query, path(:data, :map))
     message = Pathex.view!(callback_query, path(:message, :map))
@@ -138,6 +143,12 @@ defmodule CleanerBot.Dispatcher do
     Commands.DeleteLosingDice.call(chat_config, message, dice)
 
     context
+  end
+
+  def handle({:message, %{new_chat_members: new_members}}, context) when not is_nil(new_members) do
+    Enum.reduce(new_members, context, fn member, context ->
+      Commands.Capthca.call(context, member)
+    end)
   end
 
   def handle(_event, context), do: context
