@@ -5,7 +5,7 @@ defmodule CleanerBot.Commands.NikitaCounter do
 
   require ExGram.Dsl.Keyboard
 
-  @chat_id Application.compile_env(:cleaner, [__MODULE__, :chat_id])
+  @chat_id Application.compile_env(:cleaner, [__MODULE__, :chat_id], 0)
   @user_id Application.compile_env(:cleaner, [__MODULE__, :user_id])
   @user_birth_day ~D[2005-02-10]
 
