@@ -1,12 +1,12 @@
-defmodule Cleaner.CapthcaStorage.DynamicSupervisor do
+defmodule Cleaner.CaptchaStorage.DynamicSupervisor do
   @moduledoc false
   use DynamicSupervisor
 
-  alias Cleaner.CapthcaStorage
+  alias Cleaner.CaptchaStorage
 
   @spec start_child(term()) :: Supervisor.on_start_child()
   def start_child(argument) do
-    DynamicSupervisor.start_child(__MODULE__, {CapthcaStorage.Item, argument})
+    DynamicSupervisor.start_child(__MODULE__, {CaptchaStorage.Item, argument})
   end
 
   @spec start_link(any()) :: Supervisor.on_start()

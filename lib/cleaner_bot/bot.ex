@@ -26,7 +26,7 @@ defmodule CleanerBot.Dispatcher do
   @spec handle(ExGram.Dispatcher.parsed_message(), ExGram.Cnt.t()) :: ExGram.Cnt.t()
   def handle({:text, _text, %ExGram.Model.Message{} = message}, context) do
     if user = message.from do
-      Commands.Capthca.check(user, message, context)
+      Commands.Captcha.check(user, message, context)
     end
   end
 
@@ -147,7 +147,7 @@ defmodule CleanerBot.Dispatcher do
 
   def handle({:message, %{new_chat_members: new_members}}, context) when not is_nil(new_members) do
     Enum.reduce(new_members, context, fn member, context ->
-      Commands.Capthca.call(context, member)
+      Commands.Captcha.call(context, member)
     end)
   end
 

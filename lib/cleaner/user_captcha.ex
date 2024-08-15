@@ -1,4 +1,4 @@
-defmodule Cleaner.UserCapthca do
+defmodule Cleaner.UserCaptcha do
   @moduledoc false
   @keys ~w[chat_id user_id answer]a
 
