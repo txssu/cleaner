@@ -1,12 +1,14 @@
 defmodule CleanerBot.Commands.Captcha do
   @moduledoc false
 
+  import Cleaner.TgMarkdownUtils
+
   @spec call(context, ExGram.Model.User.t()) :: context
         when context: ExGram.Cnt.t()
   def call(context, %ExGram.Model.User{} = new_member) do
     chat_id = context.update.message.chat.id
 
-    mention = "[#{new_member.first_name}](tg://user?id=#{new_member.id})"
+    mention = ~i"[#{new_member.first_name}](tg://user?id=#{new_member.id})"
     {answer, captcha_text} = generate_captcha()
 
     text = """
@@ -16,12 +18,13 @@ defmodule CleanerBot.Commands.Captcha do
     Если ты отправишь что\\-то кроме ответа на капчу, я кикну тебя из чата\\.
     """
 
-    ExGram.send_message!(chat_id, text, parse_mode: "MarkdownV2", bot: CleanerBot.Dispatcher)
+    message = ExGram.send_message!(chat_id, text, parse_mode: "MarkdownV2", bot: CleanerBot.Dispatcher)
 
     user_captcha = %Cleaner.UserCaptcha{
       chat_id: chat_id,
-      user_id: new_member.id,
-      answer: answer
+      user: new_member,
+      answer: answer,
+      messages_ids: [message.message_id, context.update.message.message_id]
     }
 
     Cleaner.CaptchaStorage.create(user_captcha)
@@ -32,8 +35,8 @@ defmodule CleanerBot.Commands.Captcha do
   @spec check(ExGram.Model.User.t(), ExGram.Model.Message.t(), context) :: context
         when context: ExGram.Cnt.t()
   def check(%ExGram.Model.User{} = user, %ExGram.Model.Message{} = message, context) do
-    chat_id = context.update.message.chat.id
-    Cleaner.CaptchaStorage.check(chat_id, user.id, message.text)
+    chat_id = message.chat.id
+    Cleaner.CaptchaStorage.check(chat_id, user.id, message.message_id, message.text)
 
     context
   end

@@ -10,11 +10,11 @@ defmodule Cleaner.CaptchaStorage do
     CaptchaStorage.DynamicSupervisor.start_child(user_capcha)
   end
 
-  @spec check(integer(), integer(), String.t()) :: :ok
-  def check(chat_id, user_id, text) do
+  @spec check(integer(), integer(), integer(), String.t()) :: :ok
+  def check(chat_id, user_id, message_id, text) do
     case CaptchaStorage.Registry.lookup({chat_id, user_id}) do
       [] -> nil
-      [{pid, _value}] -> CaptchaStorage.Item.check(pid, text)
+      [{pid, _value}] -> CaptchaStorage.Item.check(pid, message_id, text)
     end
 
     :ok

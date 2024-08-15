@@ -1,13 +1,14 @@
 defmodule Cleaner.UserCaptcha do
   @moduledoc false
-  @keys ~w[chat_id user_id answer]a
+  @keys ~w[chat_id user answer messages_ids]a
 
   @enforce_keys @keys
   defstruct @keys
 
   @type t :: %__MODULE__{
           chat_id: integer(),
-          user_id: integer(),
-          answer: String.t()
+          user: ExGram.Model.User.t(),
+          answer: String.t(),
+          messages_ids: [integer()]
         }
 end
