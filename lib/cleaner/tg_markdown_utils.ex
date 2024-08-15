@@ -5,6 +5,7 @@ defmodule Cleaner.TgMarkdownUtils do
   @spec sigil_i(Macro.t(), any()) :: Macro.t()
   defmacro sigil_i(data, _params) do
     Macro.prewalk(data, fn
+      # credo:disable-for-next-line Credo.Check.Consistency.UnusedVariableNames
       {{:., _, _}, outer_meta, _} = ast ->
         if Keyword.get(outer_meta, :from_interpolation, false) do
           escape_markdown_fun = quote do: escape_telegram_markdown()
