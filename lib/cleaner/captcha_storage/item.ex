@@ -50,7 +50,7 @@ defmodule Cleaner.CaptchaStorage.Item do
   end
 
   defp close(%UserCaptcha{} = user_capcha) do
-    ExGram.delete_messages!(user_capcha.chat_id, user_capcha.messages_ids, bot: CleanerBot.Dispatcher)
+    ExGram.delete_messages(user_capcha.chat_id, user_capcha.messages_ids, bot: CleanerBot.Dispatcher)
     ExGram.ban_chat_member(user_capcha.chat_id, user_capcha.user.id, bot: CleanerBot.Dispatcher)
 
     {:stop, :normal, user_capcha}
