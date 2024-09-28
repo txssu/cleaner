@@ -74,7 +74,9 @@ defmodule CleanerBot.Dispatcher do
     CleanerBot.RateLimiter.call(context)
     %{extra: %{admin?: admin?, chat_config: %{ai_prompt: prompt}}, update: %{message: %{from: user}}} = context
 
-    case Commands.AskAI.call(user, text, prompt, admin?) do
+    params = %Commands.AskAI.Params{user: user, text: text, prompt: prompt, admin?: admin?}
+
+    case Commands.AskAI.call(params) do
       {:delete, text} -> answer_and_delete(context, text)
       {:no_delete, text} -> answer(context, text)
     end

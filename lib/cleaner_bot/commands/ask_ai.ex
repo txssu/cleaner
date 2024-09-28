@@ -1,7 +1,7 @@
 defmodule CleanerBot.Commands.AskAI do
   @moduledoc false
   alias Cleaner.AI.OpenAIClient
-  alias ExGram.Model.User
+  alias CleanerBot.Commands.AskAI.Params
 
   require Logger
 
@@ -20,21 +20,21 @@ defmodule CleanerBot.Commands.AskAI do
   You answer only in Russian.
   """
 
-  @spec call(User.t(), String.t(), String.t(), boolean()) :: {:no_delete | :delete, String.t()}
-  def call(user, text, prompt, admin?)
+  @spec call(Params.t()) :: {:no_delete | :delete, String.t()}
+  def call(params)
 
-  def call(_user, "", _prompt, _admin?) do
+  def call(%Params{text: ""}) do
     {:delete, "Используй: /ask текст-вопроса"}
   end
 
-  def call(user, text, prompt, admin?) do
-    fun = fn -> send_ai_answer(user, text, prompt) end
+  def call(%Params{} = params) do
+    fun = fn -> send_ai_answer(params.user, params.text, params.prompt, []) end
 
     result =
-      if admin? do
+      if params.admin? do
         fun.()
       else
-        if_good_rate(user.id, fun)
+        if_good_rate(params.user.id, fun)
       end
 
     case result do
@@ -52,10 +52,10 @@ defmodule CleanerBot.Commands.AskAI do
     end
   end
 
-  defp send_ai_answer(user, text, prompt) do
+  defp send_ai_answer(user, text, prompt, options) do
     messages = generate_prompt(user.first_name, text, prompt)
 
-    OpenAIClient.completion(messages)
+    OpenAIClient.completion(messages, options)
   end
 
   defp generate_prompt(name, text, prompt) do
