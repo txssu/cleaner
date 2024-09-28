@@ -11,8 +11,7 @@ defmodule CleanerBot.Dispatcher do
   command("ping", description: "Проверить работает ли бот")
   command("help", description: "Вызвать помощь")
   command("menu", description: "Вызвать меню")
-  command("setdeletedelay", description: "Установить задержку перед удалением")
-  command("setaiprompt", description: "Установить промпт для /ask")
+  command("config", description: "Обновить настройки чата")
   command("ask", description: "Задать вопрос мудрецу")
   command("insult", description: "Получить порцию оскорблений")
   command("privacy", description: "Политика конфиденциальности")
@@ -58,16 +57,13 @@ defmodule CleanerBot.Dispatcher do
     answer_and_delete(context, text)
   end
 
-  def handle({:command, :setdeletedelay, %{text: text}}, %{extra: %{chat_config: chat_config, admin?: admin?}} = context) do
+  def handle({:command, :config, %{text: text}}, %{extra: %{chat_config: chat_config, admin?: admin?}} = context) do
     CleanerBot.RateLimiter.call(context)
-    text = Commands.SetDeleteDelay.call(chat_config, text, admin?)
-    answer_and_delete(context, text)
-  end
 
-  def handle({:command, :setaiprompt, %{text: text}}, %{extra: %{chat_config: chat_config, admin?: admin?}} = context) do
-    CleanerBot.RateLimiter.call(context)
-    text = Commands.SetAIPrompt.call(chat_config, text, admin?)
-    answer_and_delete(context, text)
+    case Commands.SetConfigField.call(chat_config, text, admin?) do
+      {:ok, text} -> answer_and_delete(context, text)
+      {:error, _error} -> answer_and_delete(context, "АШИПКА!!")
+    end
   end
 
   def handle({:command, :ask, %{text: text}}, context) do
