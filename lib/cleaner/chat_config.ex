@@ -24,7 +24,7 @@ defmodule Cleaner.ChatConfig do
   @spec changeset(t(), map()) :: Ecto.Changeset.t()
   def changeset(chat_config, attrs) do
     chat_config
-    |> cast(attrs, [:ai_prompt, :delete_delay_in_seconds, :last_help_message])
+    |> cast(attrs, [:ai_model, :ai_prompt, :delete_delay_in_seconds, :last_help_message])
     |> validate_number(:delete_delay_in_seconds, greater_than: 3)
     |> validate_inclusion(:ai_model, ["gpt-4o-mini", "gpt-4o-2024-08-06"])
   end
