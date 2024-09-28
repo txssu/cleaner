@@ -7,7 +7,8 @@ defmodule CleanerBot.Commands.SetConfigField do
 
   @allow_keys [
     %Key{name: :ai_prompt, doc: "системный промпт для команды /ask"},
-    %Key{name: :delete_delay_in_seconds, short_name: :delete_delay, doc: "количество секунд для таймера на удаление"}
+    %Key{name: :delete_delay_in_seconds, short_name: :delete_delay, doc: "количество секунд для таймера на удаление"},
+    %Key{name: :ai_model, doc: "используемая модель от OpenAI"}
   ]
 
   @spec call(ChatConfig.t(), String.t(), boolean()) :: {:ok, String.t()} | {:error, atom()}

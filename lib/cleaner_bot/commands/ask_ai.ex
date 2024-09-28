@@ -28,7 +28,7 @@ defmodule CleanerBot.Commands.AskAI do
   end
 
   def call(%Params{} = params) do
-    fun = fn -> send_ai_answer(params.user, params.text, params.prompt, []) end
+    fun = fn -> send_ai_answer(params.user, params.text, params.prompt, model: params.model) end
 
     result =
       if params.admin? do

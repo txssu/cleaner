@@ -16,6 +16,7 @@ defmodule Cleaner.ChatConfig do
     field :delete_delay_in_seconds, :integer, default: 8
     field :last_help_message, :string
     field :ai_prompt, :string
+    field :ai_model, :string, default: "gpt-4o-mini"
 
     timestamps(type: :utc_datetime)
   end
@@ -25,6 +26,7 @@ defmodule Cleaner.ChatConfig do
     chat_config
     |> cast(attrs, [:ai_prompt, :delete_delay_in_seconds, :last_help_message])
     |> validate_number(:delete_delay_in_seconds, greater_than: 3)
+    |> validate_inclusion(:ai_model, ["gpt-4o-mini", "gpt-4o-2024-08-06"])
   end
 
   @spec get_by_id_or_new(integer()) :: t()
