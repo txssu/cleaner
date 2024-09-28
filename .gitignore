@@ -27,7 +27,3 @@ cleaner-*.tar
 
 # Environment
 .env
-
-# Nix
-.nix-*
-.direnv
