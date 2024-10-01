@@ -1,6 +1,7 @@
 defmodule CleanerBot.Commands.AskAI do
   @moduledoc false
   alias Cleaner.AI.OpenAIClient
+  alias Cleaner.User.SpendedMoney
   alias CleanerBot.Commands.AskAI.Params
 
   require Logger
@@ -38,7 +39,8 @@ defmodule CleanerBot.Commands.AskAI do
       end
 
     case result do
-      {:ok, message} ->
+      {:ok, message, price} ->
+        SpendedMoney.insert(params.internal_user, params.model, price)
         {:no_delete, message}
 
       {:error, :rate_limit, time_left_ms} ->

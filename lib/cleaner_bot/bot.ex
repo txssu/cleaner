@@ -20,6 +20,7 @@ defmodule CleanerBot.Dispatcher do
 
   middleware(ExGram.Middleware.IgnoreUsername)
   middleware(CleanerBot.Middlewares.FetchChat)
+  middleware(CleanerBot.Middlewares.FetchUser)
   middleware(CleanerBot.Middlewares.IsAdmin)
 
   @spec handle(ExGram.Dispatcher.parsed_message(), ExGram.Cnt.t()) :: ExGram.Cnt.t()
@@ -69,10 +70,20 @@ defmodule CleanerBot.Dispatcher do
   def handle({:command, :ask, %{text: text}}, context) do
     CleanerBot.RateLimiter.call(context)
 
-    %{extra: %{admin?: admin?, chat_config: %{ai_prompt: prompt, ai_model: ai_model}}, update: %{message: %{from: user}}} =
+    %{
+      extra: %{admin?: admin?, chat_config: %{ai_prompt: prompt, ai_model: ai_model}, internal_user: internal_user},
+      update: %{message: %{from: user}}
+    } =
       context
 
-    params = %Commands.AskAI.Params{user: user, text: text, prompt: prompt, admin?: admin?, model: ai_model}
+    params = %Commands.AskAI.Params{
+      user: user,
+      text: text,
+      prompt: prompt,
+      admin?: admin?,
+      model: ai_model,
+      internal_user: internal_user
+    }
 
     case Commands.AskAI.call(params) do
       {:delete, text} -> answer_and_delete(context, text)

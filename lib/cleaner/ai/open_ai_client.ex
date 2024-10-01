@@ -11,7 +11,7 @@ defmodule Cleaner.AI.OpenAIClient do
 
   @type message :: %{role: String.t(), content: String.t()}
 
-  @spec completion([message()], Keyword.t()) :: {:error, any()} | {:ok, any()}
+  @spec completion([message()], Keyword.t()) :: {:error, any()} | {:ok, String.t(), number()}
   def completion(messages, options \\ []) do
     model = Keyword.get(options, :model, "gpt-4o-mini")
 
@@ -22,8 +22,13 @@ defmodule Cleaner.AI.OpenAIClient do
 
     with {:ok, %{body: body}} <- post("/v1/chat/completions", body) do
       content = Pathex.view!(body, path("choices" / 0 / "message" / "content"))
+      input_tokens = Pathex.view!(body, path("usage" / "prompt_tokens"))
+      output_tokens = Pathex.view!(body, path("usage" / "completion_tokens"))
 
-      {:ok, content}
+      price =
+        Cleaner.AI.Prices.calculate(model, input_tokens, output_tokens)
+
+      {:ok, content, price}
     end
   end
 
