@@ -38,20 +38,25 @@ defmodule CleanerBot.Commands.AskAI do
         if_good_rate(params.user.id, fun)
       end
 
-    case result do
-      {:ok, message, price} ->
-        SpendedMoney.insert(params.internal_user, params.model, price)
-        {:no_delete, message}
+    handle_result(result, params)
+  end
 
-      {:error, :rate_limit, time_left_ms} ->
-        time_left_hours = time_left_ms / 1000 / 60 / 60
-        formatted_time_left = :erlang.float_to_binary(time_left_hours, [{:decimals, 2}, :compact])
-        {:delete, "Отстань, я занят!!\n(достигнут лимит запросов, попробуй через #{formatted_time_left} ч.)"}
+  defp handle_result(result, params)
 
-      {:error, reason} ->
-        Logger.error("Unhandled error: #{inspect(reason)}")
-        {:delete, "АШИПКАА!!!"}
-    end
+  defp handle_result({:ok, message, price}, params) do
+    SpendedMoney.insert(params.internal_user, params.model, price)
+    {:no_delete, message}
+  end
+
+  defp handle_result({:error, :rate_limit, time_left_ms}, _params) do
+    time_left_hours = time_left_ms / 1000 / 60 / 60
+    formatted_time_left = :erlang.float_to_binary(time_left_hours, [{:decimals, 2}, :compact])
+    {:delete, "Отстань, я занят!!\n(достигнут лимит запросов, попробуй через #{formatted_time_left} ч.)"}
+  end
+
+  defp handle_result({:error, reason}, _params) do
+    Logger.error("Unhandled error: #{inspect(reason)}")
+    {:delete, "АШИПКАА!!!"}
   end
 
   defp send_ai_answer(user, text, prompt, options) do

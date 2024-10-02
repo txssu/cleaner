@@ -1,5 +1,6 @@
 defmodule Cleaner.AI.Prices do
   @moduledoc false
+  @spec calculate(String.t(), integer(), integer()) :: integer()
   def calculate(model, input_tokens, output_tokens)
 
   def calculate("gpt-4o-2024-08-06", input_tokens, output_tokens) do

@@ -4,6 +4,8 @@ defmodule Cleaner.AI.OpenAIClient do
   use Pathex
   use Tesla, only: [:post], docs: false
 
+  alias Cleaner.AI.Prices
+
   plug(Tesla.Middleware.BaseUrl, api_url())
   plug(Tesla.Middleware.Headers, [{"authorization", api_key()}])
   plug(Tesla.Middleware.JSON)
@@ -25,8 +27,7 @@ defmodule Cleaner.AI.OpenAIClient do
       input_tokens = Pathex.view!(body, path("usage" / "prompt_tokens"))
       output_tokens = Pathex.view!(body, path("usage" / "completion_tokens"))
 
-      price =
-        Cleaner.AI.Prices.calculate(model, input_tokens, output_tokens)
+      price = Prices.calculate(model, input_tokens, output_tokens)
 
       {:ok, content, price}
     end
