@@ -1,4 +1,4 @@
-defmodule CleanerBot.Commands.SetConfigField.Key do
+defmodule CleanerBot.Commands.Configurator.Key do
   @moduledoc false
 
   defstruct ~w[name short_name doc]a

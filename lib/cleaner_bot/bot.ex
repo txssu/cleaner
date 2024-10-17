@@ -63,10 +63,9 @@ defmodule CleanerBot.Dispatcher do
   def handle({:command, :config, %{text: text}}, %{extra: %{chat_config: chat_config, admin?: admin?}} = context) do
     CleanerBot.RateLimiter.call(context)
 
-    case Commands.SetConfigField.call(chat_config, text, admin?) do
-      {:ok, text} -> answer_and_delete(context, text)
-      {:error, _error} -> answer_and_delete(context, "АШИПКА!!")
-    end
+    response = Commands.Configurator.call(chat_config, text, admin?)
+
+    answer_and_delete(context, response)
   end
 
   def handle({:command, :ask, %{text: text}}, context) do
