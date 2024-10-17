@@ -46,16 +46,16 @@ defmodule Clenaer.KolovratGenerator do
     (size * 2)
     |> matrix()
     |> Enum.map(fn coord ->
-      Enum.find_value(template, " ", fn {template_coord, char} ->
-        template_coord == coord && char
+      Enum.find_value(template, " ", fn {{x, y}, char} ->
+        {x * 2, y} == coord && char
       end)
     end)
-    |> Enum.chunk_every(size * 2)
+    |> Enum.chunk_every(size * 4)
     |> Enum.map_join("\n", &Enum.join/1)
   end
 
   defp matrix(size) do
-    for y <- 0..(size - 1), x <- 0..(size - 1) do
+    for y <- 0..(size - 2), x <- 0..(size * 2 - 1) do
       {x, y}
     end
   end
