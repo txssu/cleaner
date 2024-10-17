@@ -171,18 +171,22 @@ defmodule CleanerBot.Dispatcher do
   def handle({:inline_query, inline_query}, context) do
     kolovrat = Commands.Kolovrat.call(inline_query.query)
 
-    answer_inline_query(context, [
-      %InlineQueryResultArticle{
-        type: "article",
-        id: inline_query.id,
-        title: "Коловрат",
-        description: "Нажми, чтобы сгенерировать ASCII-арт с шаблоном коловрата",
-        input_message_content: %InputTextMessageContent{
-          message_text: kolovrat,
-          parse_mode: "MarkdownV2"
+    answer_inline_query(
+      context,
+      [
+        %InlineQueryResultArticle{
+          type: "article",
+          id: inline_query.id,
+          title: "Коловрат",
+          description: "Нажми, чтобы сгенерировать ASCII-арт с шаблоном коловрата",
+          input_message_content: %InputTextMessageContent{
+            message_text: kolovrat,
+            parse_mode: "MarkdownV2"
+          }
         }
-      }
-    ])
+      ],
+      cache_time: 0
+    )
   end
 
   def handle(_event, context), do: context
