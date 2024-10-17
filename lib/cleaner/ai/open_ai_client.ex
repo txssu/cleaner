@@ -9,7 +9,7 @@ defmodule Cleaner.AI.OpenAIClient do
   plug(Tesla.Middleware.BaseUrl, api_url())
   plug(Tesla.Middleware.Headers, [{"authorization", api_key()}])
   plug(Tesla.Middleware.JSON)
-  plug(Tesla.Middleware.Timeout, timeout: 10_000)
+  plug(Tesla.Middleware.Timeout, timeout: 30_000)
 
   @type message :: %{role: String.t(), content: String.t()}
 
