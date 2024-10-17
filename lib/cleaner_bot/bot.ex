@@ -6,6 +6,8 @@ defmodule CleanerBot.Dispatcher do
   import CleanerBot.Utils
 
   alias CleanerBot.Commands
+  alias ExGram.Model.InlineQueryResultArticle
+  alias ExGram.Model.InputTextMessageContent
   alias ExGram.Model.ReplyParameters
 
   command("ping", description: "Проверить работает ли бот")
@@ -160,6 +162,27 @@ defmodule CleanerBot.Dispatcher do
     Enum.reduce(new_members, context, fn member, context ->
       Commands.Captcha.call(context, member)
     end)
+  end
+
+  def handle({:inline_query, %{query: ""}}, context) do
+    context
+  end
+
+  def handle({:inline_query, inline_query}, context) do
+    kolovrat = CleanerBot.Commands.Kolovrat.call(inline_query.query)
+
+    answer_inline_query(context, [
+      %InlineQueryResultArticle{
+        type: "article",
+        id: inline_query.id,
+        title: "Коловрат",
+        description: "Нажми, чтобы сгенерировать ASCII-арт с шаблоном коловрата",
+        input_message_content: %InputTextMessageContent{
+          message_text: kolovrat,
+          parse_mode: "MarkdownV2"
+        }
+      }
+    ])
   end
 
   def handle(_event, context), do: context
