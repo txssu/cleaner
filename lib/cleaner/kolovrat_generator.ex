@@ -12,10 +12,10 @@ defmodule Clenaer.KolovratGenerator do
   end
 
   def maybe_append_length(word) do
-    if String.length(word) <= 3 do
-      word <> word
-    else
-      word
+    case String.length(word) do
+      1 -> word <> word <> word
+      n when n in 2..3 -> word <> word
+      _greater -> word
     end
   end
 
