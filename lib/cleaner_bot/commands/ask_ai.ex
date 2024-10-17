@@ -29,7 +29,7 @@ defmodule CleanerBot.Commands.AskAI do
   end
 
   def call(%Params{} = params) do
-    fun = fn -> send_ai_answer(params.user, params.text, params.prompt, model: params.model) end
+    fun = fn -> send_ai_answer(params.user, params.text, params.prompt, []) end
 
     result =
       if params.admin? do
@@ -44,7 +44,7 @@ defmodule CleanerBot.Commands.AskAI do
   defp handle_result(result, params)
 
   defp handle_result({:ok, message, price}, params) do
-    SpendedMoney.insert(params.internal_user, params.model, price)
+    SpendedMoney.insert(params.internal_user, "gpt-4o-mini", price)
     {:no_delete, message}
   end
 

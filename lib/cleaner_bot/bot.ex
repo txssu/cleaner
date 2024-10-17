@@ -73,7 +73,7 @@ defmodule CleanerBot.Dispatcher do
     CleanerBot.RateLimiter.call(context)
 
     %{
-      extra: %{admin?: admin?, chat_config: %{ai_prompt: prompt, ai_model: ai_model}, internal_user: internal_user},
+      extra: %{admin?: admin?, chat_config: %{ai_prompt: prompt}, internal_user: internal_user},
       update: %{message: %{from: user}}
     } =
       context
@@ -83,7 +83,6 @@ defmodule CleanerBot.Dispatcher do
       text: text,
       prompt: prompt,
       admin?: admin?,
-      model: ai_model,
       internal_user: internal_user
     }
 
