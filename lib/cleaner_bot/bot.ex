@@ -169,7 +169,7 @@ defmodule CleanerBot.Dispatcher do
   end
 
   def handle({:inline_query, inline_query}, context) do
-    kolovrat = CleanerBot.Commands.Kolovrat.call(inline_query.query)
+    kolovrat = Commands.Kolovrat.call(inline_query.query)
 
     answer_inline_query(context, [
       %InlineQueryResultArticle{

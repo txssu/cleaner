@@ -1,6 +1,7 @@
 defmodule Clenaer.KolovratGenerator do
   @moduledoc false
 
+  @spec word_to_kolovrat(String.t()) :: String.t()
   def word_to_kolovrat(word) do
     word = maybe_append_length(word)
     width = String.length(word)
@@ -11,7 +12,7 @@ defmodule Clenaer.KolovratGenerator do
     |> to_string(width)
   end
 
-  def maybe_append_length(word) do
+  defp maybe_append_length(word) do
     case String.length(word) do
       1 -> word <> word <> word
       n when n in 2..3 -> word <> word
@@ -19,7 +20,7 @@ defmodule Clenaer.KolovratGenerator do
     end
   end
 
-  def kolovrat_template(width) do
+  defp kolovrat_template(width) do
     size = width - 1
 
     wing_right =
@@ -35,13 +36,13 @@ defmodule Clenaer.KolovratGenerator do
     Enum.map(kolovrat, fn {x, y} -> {x + size, y + size} end)
   end
 
-  def add_word_to_template(template, word) do
+  defp add_word_to_template(template, word) do
     chars = word |> String.graphemes() |> Stream.cycle()
 
     Enum.zip(template, chars)
   end
 
-  def to_string(template, size) do
+  defp to_string(template, size) do
     (size * 2)
     |> matrix()
     |> Enum.map(fn coord ->
