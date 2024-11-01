@@ -12,6 +12,7 @@ defmodule Cleaner.Application do
     token = Application.fetch_env!(@app, CleanerBot.Dispatcher)[:telegram_token]
 
     children = [
+      LogSewerBackend.Supervisor,
       Cleaner.Scheduler,
       Cleaner.Repo,
       DelayBatcher.Supervisor,
@@ -20,6 +21,8 @@ defmodule Cleaner.Application do
       Cleaner.CaptchaStorage.DynamicSupervisor,
       {Registry, name: Cleaner.CaptchaStorage.Registry, keys: :unique}
     ]
+
+    {:ok, _pid} = LoggerBackends.add(LogSewerBackend)
 
     opts = [strategy: :one_for_one, name: Cleaner.Supervisor]
     Supervisor.start_link(children, opts)
