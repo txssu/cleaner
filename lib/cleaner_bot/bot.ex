@@ -73,7 +73,7 @@ defmodule CleanerBot.Dispatcher do
 
     %{
       extra: %{admin?: admin?, chat_config: %{ai_prompt: prompt}, internal_user: internal_user},
-      update: %{message: %{from: user}}
+      update: %{message: %{chat: %{id: chat_id}, reply_to_message: reply_to, from: user}}
     } =
       context
 
@@ -82,12 +82,19 @@ defmodule CleanerBot.Dispatcher do
       text: text,
       prompt: prompt,
       admin?: admin?,
-      internal_user: internal_user
+      internal_user: internal_user,
+      chat_id: chat_id,
+      reply_to: reply_to && reply_to.message_id
     }
 
     case Commands.AskAI.call(params) do
-      {:delete, text} -> answer_and_delete(context, text)
-      {:no_delete, text} -> answer(context, text)
+      {:delete, text} ->
+        answer_and_delete(context, text)
+
+      {:no_delete, text, callback} ->
+        message = ExGram.send_message!(context.update.message.chat.id, text, bot: __MODULE__)
+        callback.(message)
+        context
     end
   end
 

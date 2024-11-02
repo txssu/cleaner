@@ -13,6 +13,7 @@ defmodule Cleaner.Application do
 
     children = [
       LogSewerBackend.Supervisor,
+      {Cleaner.AI.ChatsStorage, []},
       Cleaner.Scheduler,
       Cleaner.Repo,
       DelayBatcher.Supervisor,

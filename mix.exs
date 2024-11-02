@@ -39,7 +39,8 @@ defmodule Cleaner.MixProject do
       {:mix_audit, "~> 2.1.2", only: [:dev, :test], runtime: false},
       {:styler, "~> 0.11.9", only: [:dev, :test], runtime: false},
       {:log_sewer_backend, "~> 0.0.0"},
-      {:logger_backends, "~> 1.0"}
+      {:logger_backends, "~> 1.0"},
+      {:nebulex, "~> 2.6"}
     ]
   end
 
