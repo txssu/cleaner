@@ -68,9 +68,12 @@ defmodule CleanerBot.Commands.AskAI do
   defp generate_prompt(name, text, prompt) do
     cutted_text = String.slice(text, 0, @user_prompt_length)
 
+    users_nickname = String.replace(name, ~s("), "")
+
     [
       OpenAIClient.message("system", prompt || @default_system_prompt),
-      OpenAIClient.message("#{name}: #{cutted_text}")
+      OpenAIClient.message("system", ~s(User's nickname:\n"""\n#{users_nickname}\n""")),
+      OpenAIClient.message(cutted_text)
     ]
   end
 
