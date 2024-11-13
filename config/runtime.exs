@@ -5,7 +5,8 @@ config :cleaner, CleanerBot.Dispatcher, telegram_token: System.get_env("TELEGRAM
 config :logger, LogSewerBackend,
   uri: System.fetch_env!("LOGSEWER_URI"),
   token: System.fetch_env!("LOGSEWER_TOKEN"),
-  app_name: :cleaner
+  app_name: :cleaner,
+  enabled?: config_env() == :prod
 
 if config_env() == :prod do
   config :cleaner, Cleaner.Repo,
