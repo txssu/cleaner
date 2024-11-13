@@ -13,7 +13,6 @@ defmodule Cleaner.AI do
     response =
       messages
       |> format_messages(prompt)
-      |> dbg()
       |> OpenAIClient.completion()
 
     with {:ok, text, price} <- response do
