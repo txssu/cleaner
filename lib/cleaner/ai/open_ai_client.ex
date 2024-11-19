@@ -45,8 +45,11 @@ defmodule Cleaner.AI.OpenAIClient do
   end
 
   defp api_key do
-    :cleaner
-    |> Application.get_env(__MODULE__)
-    |> Keyword.fetch!(:api_key)
+    token =
+      :cleaner
+      |> Application.get_env(__MODULE__)
+      |> Keyword.fetch!(:api_key)
+
+    "Bearer #{token}"
   end
 end
