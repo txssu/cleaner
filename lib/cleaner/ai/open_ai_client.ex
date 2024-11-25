@@ -22,14 +22,20 @@ defmodule Cleaner.AI.OpenAIClient do
       messages: messages
     }
 
-    with {:ok, %{body: body}} <- post("/v1/chat/completions", body) do
-      content = Pathex.view!(body, path("choices" / 0 / "message" / "content"))
-      input_tokens = Pathex.view!(body, path("usage" / "prompt_tokens"))
-      output_tokens = Pathex.view!(body, path("usage" / "completion_tokens"))
-
+    with {:ok, %{body: body}} <- post("/v1/chat/completions", body),
+         {:ok, content} <- fetch_from_body(body, path("choices" / 0 / "message" / "content")),
+         {:ok, input_tokens} <- fetch_from_body(body, path("usage" / "prompt_tokens")),
+         {:ok, output_tokens} <- fetch_from_body(body, path("usage" / "completion_tokens")) do
       price = Prices.calculate(model, input_tokens, output_tokens)
 
       {:ok, content, price}
+    end
+  end
+
+  def fetch_from_body(body, data_path) do
+    case Pathex.view(body, data_path) do
+      {:ok, content} -> {:ok, content}
+      :error -> {:error, :api_payload_error, body}
     end
   end
 

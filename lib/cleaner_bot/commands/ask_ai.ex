@@ -38,8 +38,8 @@ defmodule CleanerBot.Commands.AskAI do
     {:delete, "Отстань, я занят!!\n(достигнут лимит запросов, попробуй через #{formatted_time_left} ч.)"}
   end
 
-  defp handle_result({:error, reason}, _params) do
-    Logger.error("Unhandled error: #{inspect(reason)}")
+  defp handle_result(error, _params) do
+    Logger.error("Unhandled error: #{inspect(error)}")
     {:delete, "АШИПКАА!!!"}
   end
 
