@@ -32,7 +32,7 @@ defmodule Cleaner.AI.OpenAIClient do
     end
   end
 
-  def fetch_from_body(body, data_path) do
+  defp fetch_from_body(body, data_path) do
     case Pathex.view(body, data_path) do
       {:ok, content} -> {:ok, content}
       :error -> {:error, :api_payload_error, body}

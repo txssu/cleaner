@@ -9,14 +9,15 @@ defmodule Cleaner.Version do
     head_contents = File.read!(git_revision_file)
 
     if String.starts_with?(head_contents, "ref:") do
-      ref_path = String.trim(String.replace(head_contents, "ref:", ""))
+      ref_path = head_contents |> String.replace("ref:", "") |> String.trim()
       @external_resource ".git/#{ref_path}"
     end
   end
 
+  @spec get_version() :: String.t()
   def get_version do
     # Get git hash
-    {version, 0} = System.cmd("git", ["rev-parse", "--short", "HEAD"])
+    {version, 0} = System.cmd("git", ["rev-parse", "--short", "HEAD"], env: %{})
     String.trim(version)
   end
 end

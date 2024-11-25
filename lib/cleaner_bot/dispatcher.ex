@@ -71,29 +71,13 @@ defmodule CleanerBot.Dispatcher do
     answer_and_delete(context, response)
   end
 
-  def handle({:command, :ask, %{text: text} = message}, context) do
+  def handle({:command, :ask, message}, context) do
     CleanerBot.RateLimiter.call(context)
-    reply_to_id = message.message_id
 
-    %{
-      extra: %{admin?: admin?, chat_config: %{ai_prompt: prompt}, internal_user: internal_user},
-      update: %{message: %{chat: %{id: chat_id}, reply_to_message: reply_to, from: user}}
-    } =
-      context
+    command_params = Commands.AskAI.Params.from_context(context)
+    reply_params = %ReplyParameters{message_id: message.message_id}
 
-    reply_params = %ReplyParameters{message_id: reply_to_id}
-
-    params = %Commands.AskAI.Params{
-      user: user,
-      text: text,
-      prompt: prompt,
-      admin?: admin?,
-      internal_user: internal_user,
-      chat_id: chat_id,
-      reply_to: reply_to && reply_to.message_id
-    }
-
-    case Commands.AskAI.call(params) do
+    case Commands.AskAI.call(command_params) do
       {:delete, text} ->
         answer_and_delete(context, text, reply_parameters: reply_params)
 
