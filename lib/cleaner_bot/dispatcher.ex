@@ -68,14 +68,17 @@ defmodule CleanerBot.Dispatcher do
     answer_and_delete(context, response)
   end
 
-  def handle({:command, :ask, %{text: text}}, context) do
+  def handle({:command, :ask, %{text: text} = message}, context) do
     CleanerBot.RateLimiter.call(context)
+    reply_to_id = message.message_id
 
     %{
       extra: %{admin?: admin?, chat_config: %{ai_prompt: prompt}, internal_user: internal_user},
       update: %{message: %{chat: %{id: chat_id}, reply_to_message: reply_to, from: user}}
     } =
       context
+
+    reply_params = %ReplyParameters{message_id: reply_to_id}
 
     params = %Commands.AskAI.Params{
       user: user,
@@ -89,10 +92,12 @@ defmodule CleanerBot.Dispatcher do
 
     case Commands.AskAI.call(params) do
       {:delete, text} ->
-        answer_and_delete(context, text)
+        answer_and_delete(context, text, reply_parameters: reply_params)
 
       {:no_delete, text, callback} ->
-        message = ExGram.send_message!(context.update.message.chat.id, text, bot: __MODULE__)
+        message =
+          ExGram.send_message!(context.update.message.chat.id, text, bot: __MODULE__, reply_parameters: reply_params)
+
         callback.(message)
         context
     end
