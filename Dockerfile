@@ -48,6 +48,7 @@ COPY config/config.exs config/prod.exs config/
 RUN mix deps.compile
 
 COPY priv priv
+COPY .git .git
 
 # Compile the release
 COPY lib lib
