@@ -1,10 +1,8 @@
 defmodule Cleaner.Version do
   @moduledoc false
 
-  # Define the Git version at compile time
   @external_resource git_revision_file = ".git/HEAD"
 
-  # Add dependency on .git/refs if symbolic ref
   if File.exists?(git_revision_file) do
     head_contents = File.read!(git_revision_file)
 
@@ -14,10 +12,11 @@ defmodule Cleaner.Version do
     end
   end
 
+  {version, 0} = System.cmd("git", ["rev-parse", "--short", "HEAD"], env: %{})
+  @version String.trim(version)
+
   @spec get_version() :: String.t()
   def get_version do
-    # Get git hash
-    {version, 0} = System.cmd("git", ["rev-parse", "--short", "HEAD"], env: %{})
-    String.trim(version)
+    @version
   end
 end
