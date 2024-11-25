@@ -10,6 +10,8 @@ defmodule CleanerBot.Dispatcher do
   alias ExGram.Model.InputTextMessageContent
   alias ExGram.Model.ReplyParameters
 
+  @v Cleaner.Version.get_version()
+
   command("ping", description: "Проверить работает ли бот")
   command("help", description: "Вызвать помощь")
   command("menu", description: "Вызвать меню")
@@ -19,6 +21,7 @@ defmodule CleanerBot.Dispatcher do
   command("privacy", description: "Политика конфиденциальности")
   command("del")
   command("info")
+  command("v")
 
   middleware(ExGram.Middleware.IgnoreUsername)
   middleware(CleanerBot.Middlewares.FetchChat)
@@ -141,6 +144,10 @@ defmodule CleanerBot.Dispatcher do
     else
       context
     end
+  end
+
+  def handle({:command, :v, _message}, context) do
+    answer_and_delete(context, @v)
   end
 
   def handle({:callback_query, callback_query}, context) do
