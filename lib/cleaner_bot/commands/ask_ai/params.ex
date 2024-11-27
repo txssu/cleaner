@@ -14,13 +14,11 @@ defmodule CleanerBot.Commands.AskAI.Params do
           reply_to: integer()
         }
 
-  @spec from_context(map()) :: t()
-  def from_context(context) do
-    %{
-      extra: %{admin?: admin?, chat_config: %{ai_prompt: prompt}, internal_user: internal_user},
-      update: %{message: %{chat: %{id: chat_id}, text: text, reply_to_message: reply_to, from: user}}
-    } =
-      context
+  @spec from_context(ExGram.Cnt.t(), ExGram.Model.Message.t()) :: t()
+  def from_context(context, message) do
+    %{extra: %{admin?: admin?, chat_config: %{ai_prompt: prompt}, internal_user: internal_user}} = context
+
+    %{chat: %{id: chat_id}, text: text, reply_to_message: reply_to, from: user} = message
 
     %__MODULE__{
       user: user,

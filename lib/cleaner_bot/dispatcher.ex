@@ -74,7 +74,7 @@ defmodule CleanerBot.Dispatcher do
   def handle({:command, :ask, message}, context) do
     CleanerBot.RateLimiter.call(context)
 
-    command_params = Commands.AskAI.Params.from_context(context)
+    command_params = Commands.AskAI.Params.from_context(context, message)
     reply_params = %ReplyParameters{message_id: message.message_id}
 
     case Commands.AskAI.call(command_params) do
