@@ -22,7 +22,7 @@ defmodule CleanerBot.Commands.AskAI do
         AI.completion(
           params.user.first_name,
           params.text,
-          params.reply_to.text,
+          params.reply_to,
           {params.chat_id, params.reply_to.message_id},
           params.prompt
         )

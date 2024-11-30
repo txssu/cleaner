@@ -4,6 +4,18 @@ defmodule CleanerBot.Commands.AskAI.Params do
 
   defstruct ~w[user text prompt admin? internal_user reply_to chat_id]a
 
+  defmodule ReplyTo do
+    @moduledoc false
+
+    defstruct ~w[message_id text from_username]a
+
+    @type t :: %__MODULE__{
+            message_id: integer(),
+            text: String.t(),
+            from_username: String.t()
+          }
+  end
+
   @type t :: %__MODULE__{
           user: User.t(),
           text: String.t(),
@@ -11,10 +23,7 @@ defmodule CleanerBot.Commands.AskAI.Params do
           admin?: boolean(),
           internal_user: Cleaner.User.t(),
           chat_id: integer(),
-          reply_to: %{
-            message_id: integer(),
-            text: String.t()
-          }
+          reply_to: ReplyTo.t()
         }
 
   @spec from_context(ExGram.Cnt.t(), ExGram.Model.Message.t()) :: t()
@@ -39,17 +48,18 @@ defmodule CleanerBot.Commands.AskAI.Params do
   defp transform_reply_to(message, reply_message, reply_to_bot?)
 
   defp transform_reply_to(nil, _quote_data, _reply_to_bot?) do
-    %{message_id: nil, text: nil}
+    %ReplyTo{message_id: nil, text: nil}
   end
 
-  defp transform_reply_to(%{message_id: message_id}, %{text: text}, _reply_to_bot?) do
-    %{message_id: message_id, text: text}
+  defp transform_reply_to(%{message_id: message_id, from: %{first_name: username}}, %{text: text}, reply_to_bot?) do
+    %ReplyTo{message_id: message_id, text: text, from_username: if(reply_to_bot?, do: nil, else: username)}
   end
 
-  defp transform_reply_to(%{message_id: message_id, text: text}, nil, reply_to_bot?) do
-    %{
+  defp transform_reply_to(%{message_id: message_id, text: text, from: %{first_name: username}}, nil, reply_to_bot?) do
+    %ReplyTo{
       message_id: message_id,
-      text: if(reply_to_bot?, do: nil, else: text)
+      text: if(reply_to_bot?, do: nil, else: text),
+      from_username: if(reply_to_bot?, do: nil, else: username)
     }
   end
 end

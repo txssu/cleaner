@@ -4,13 +4,14 @@ defmodule Cleaner.AI do
   alias Cleaner.AI.ChatsStorage
   alias Cleaner.Ai.ChatsStorageMessage
   alias Cleaner.AI.OpenAIClient
+  alias CleanerBot.Commands.AskAI.Params
 
-  @spec completion(String.t(), String.t(), String.t() | nil, {integer(), integer()}, String.t()) ::
+  @spec completion(String.t(), String.t(), map() | nil, {integer(), integer()}, String.t()) ::
           {:ok, String.t(), integer(), function()} | {:error, any()}
-  def completion(username, text, reply_to_text, key_ids, prompt) do
+  def completion(username, text, reply_to, key_ids, prompt) do
     messages =
       populate_with_history(
-        %ChatsStorageMessage{username: username, message: text, reply_to_text: reply_to_text},
+        %ChatsStorageMessage{username: username, message: text, reply_to: reply_to},
         key_ids
       )
 
@@ -39,10 +40,11 @@ defmodule Cleaner.AI do
     [OpenAIClient.message("assistant", message)]
   end
 
-  defp convert_message(%ChatsStorageMessage{username: username, message: text, reply_to_text: reply_text}) do
+  defp convert_message(%ChatsStorageMessage{username: username, message: text, reply_to: reply_to}) do
     []
+    |> maybe_add_reply_text_message(reply_to)
     |> add_username_message(username)
-    |> maybe_add_reply_text_message(reply_text)
+    |> maybe_add_quote_text_message(reply_to)
     |> add_user_message(text)
     |> Enum.reverse()
   end
@@ -54,11 +56,28 @@ defmodule Cleaner.AI do
     [message | messages]
   end
 
-  defp maybe_add_reply_text_message(messages, nil), do: messages
+  defp maybe_add_reply_text_message(messages, %Params.ReplyTo{from_username: nil}) do
+    messages
+  end
 
-  defp maybe_add_reply_text_message(messages, reply_text) do
-    safe_text = String.replace(reply_text, ~s("), "")
-    message = OpenAIClient.message("system", ~s(The user replies to this text:\n"""\n#{safe_text}\n"""))
+  defp maybe_add_reply_text_message(messages, %Params.ReplyTo{} = reply_to) do
+    messages
+    |> add_username_message(reply_to.from_username)
+    |> add_user_message(reply_to.text)
+  end
+
+  defp maybe_add_quote_text_message(messages, %Params.ReplyTo{text: nil}), do: messages
+
+  defp maybe_add_quote_text_message(messages, %Params.ReplyTo{from_username: username}) when not is_nil(username) do
+    message = OpenAIClient.message("system", "User replies to previous message")
+
+    [message | messages]
+  end
+
+  defp maybe_add_quote_text_message(messages, %Params.ReplyTo{} = reply_to) do
+    safe_text = String.replace(reply_to.text, ~s("), "")
+
+    message = OpenAIClient.message("system", ~s(User replies to this text in previous message:\n"""\n#{safe_text}\n"""))
 
     [message | messages]
   end
