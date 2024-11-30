@@ -5,10 +5,14 @@ defmodule Cleaner.AI do
   alias Cleaner.Ai.ChatsStorageMessage
   alias Cleaner.AI.OpenAIClient
 
-  @spec completion(String.t(), String.t(), {integer(), integer()}, String.t()) ::
+  @spec completion(String.t(), String.t(), String.t() | nil, {integer(), integer()}, String.t()) ::
           {:ok, String.t(), integer(), function()} | {:error, any()}
-  def completion(username, text, key_ids, prompt) do
-    messages = populate_with_history(%ChatsStorageMessage{username: username, message: text}, key_ids)
+  def completion(username, text, reply_to_text, key_ids, prompt) do
+    messages =
+      populate_with_history(
+        %ChatsStorageMessage{username: username, message: text, reply_to_text: reply_to_text},
+        key_ids
+      )
 
     response =
       messages
@@ -28,20 +32,39 @@ defmodule Cleaner.AI do
 
     users_messages = Enum.flat_map(messages, &convert_message/1)
 
-    [prompt_message | users_messages]
+    dbg([prompt_message | users_messages])
   end
 
   defp convert_message(%ChatsStorageMessage{my?: true, message: message}) do
     [OpenAIClient.message("assistant", message)]
   end
 
-  defp convert_message(%ChatsStorageMessage{username: username, message: message}) do
-    user_nickname = String.replace(username, ~s("), "")
+  defp convert_message(%ChatsStorageMessage{username: username, message: text, reply_to_text: reply_text}) do
+    []
+    |> add_username_message(username)
+    |> maybe_add_reply_text_message(reply_text)
+    |> add_user_message(text)
+    |> Enum.reverse()
+  end
 
-    [
-      OpenAIClient.message("system", ~s(User's nickname:\n"""\n#{user_nickname}\n""")),
-      OpenAIClient.message(message)
-    ]
+  defp add_username_message(messages, username) do
+    user_nickname = String.replace(username, ~s("), "")
+    message = OpenAIClient.message("system", ~s(User's nickname:\n"""\n#{user_nickname}\n"""))
+
+    [message | messages]
+  end
+
+  defp maybe_add_reply_text_message(messages, nil), do: messages
+
+  defp maybe_add_reply_text_message(messages, reply_text) do
+    safe_text = String.replace(reply_text, ~s("), "")
+    message = OpenAIClient.message("system", ~s(The user replies to this text:\n"""\n#{safe_text}\n"""))
+
+    [message | messages]
+  end
+
+  defp add_user_message(messages, text) do
+    [OpenAIClient.message(text) | messages]
   end
 
   defp new_message_callback(messages) do

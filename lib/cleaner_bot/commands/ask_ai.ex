@@ -19,7 +19,13 @@ defmodule CleanerBot.Commands.AskAI do
   def call(%Params{} = params) do
     with_result =
       with :ok <- validate_rate(params.user.id, params.admin?) do
-        AI.completion(params.user.first_name, params.text, {params.chat_id, params.reply_to}, params.prompt)
+        AI.completion(
+          params.user.first_name,
+          params.text,
+          params.reply_to.text,
+          {params.chat_id, params.reply_to.message_id},
+          params.prompt
+        )
       end
 
     handle_result(with_result, params)
