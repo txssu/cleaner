@@ -33,7 +33,7 @@ defmodule Cleaner.AI do
 
     users_messages = Enum.flat_map(messages, &convert_message/1)
 
-    dbg([prompt_message | users_messages])
+    [prompt_message | users_messages]
   end
 
   defp convert_message(%ChatsStorageMessage{my?: true, message: message}) do
