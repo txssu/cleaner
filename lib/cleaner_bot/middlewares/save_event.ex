@@ -30,6 +30,10 @@ defmodule CleanerBot.SaveEventMiddleware do
         do: {key, minify_data(minified_value)}
   end
 
+  defp minify_data(list) when is_list(list) do
+    Enum.map(list, &minify_data/1)
+  end
+
   defp minify_data(value) do
     value
   end
