@@ -23,6 +23,8 @@ defmodule CleanerBot.Dispatcher do
   command("info")
   command("v")
 
+  middleware(CleanerBot.SaveEventMiddleware)
+
   middleware(ExGram.Middleware.IgnoreUsername)
   middleware(CleanerBot.Middlewares.FetchChat)
   middleware(CleanerBot.Middlewares.FetchUser)
