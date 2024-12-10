@@ -6,7 +6,7 @@ defmodule CleanerBot.Commands.Info do
   def call(context) do
     context
     |> get_chat_id()
-    |> maybe_append_user_id(context)
+    |> maybe_append_user_info(context)
   end
 
   defp get_chat_id(context) do
@@ -15,10 +15,14 @@ defmodule CleanerBot.Commands.Info do
     "Chat ID: #{chat_id}"
   end
 
-  defp maybe_append_user_id(text, context) do
-    case Pathex.view(context, path(:update / :message / :reply_to_message / :from / :id, :map)) do
-      {:ok, user_id} ->
-        text <> "\nUser ID: #{user_id}"
+  defp maybe_append_user_info(text, context) do
+    user_path = path(:update / :message / :reply_to_message / :from, :map)
+
+    case Pathex.view(context, user_path) do
+      {:ok, user} ->
+        user_id = user.id
+        first_name = user.first_name
+        text <> "\nUser ID: #{user_id}\nFirst name: #{first_name}"
 
       :error ->
         text
