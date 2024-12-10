@@ -75,21 +75,26 @@ defmodule CleanerBot.Dispatcher do
 
   def handle({:command, :ask, message}, context) do
     CleanerBot.RateLimiter.call(context)
+    {:ok, typing_sender} = CleanerBot.TypingSender.start_link(context.update.message.chat.id)
 
     command_params = Commands.AskAI.Params.from_context(context, message)
     reply_params = %ReplyParameters{message_id: message.message_id}
 
-    case Commands.AskAI.call(command_params) do
-      {:delete, text} ->
-        answer_and_delete(context, text, reply_parameters: reply_params)
+    result =
+      case Commands.AskAI.call(command_params) do
+        {:delete, text} ->
+          answer_and_delete(context, text, reply_parameters: reply_params)
 
-      {:no_delete, text, callback} ->
-        message =
-          ExGram.send_message!(context.update.message.chat.id, text, bot: __MODULE__, reply_parameters: reply_params)
+        {:no_delete, text, callback} ->
+          message =
+            ExGram.send_message!(context.update.message.chat.id, text, bot: __MODULE__, reply_parameters: reply_params)
 
-        callback.(message)
-        context
-    end
+          callback.(message)
+          context
+      end
+
+    CleanerBot.TypingSender.stop(typing_sender)
+    result
   end
 
   def handle({:command, :insult, message}, context) do
