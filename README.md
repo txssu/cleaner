@@ -1,21 +1,15 @@
 # Cleaner
 
-**TODO: Add description**
+## Running
 
-## Installation
+For docker compose example see [docker-compose.yml](docker-compose.yml)
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `cleaner` to your list of dependencies in `mix.exs`:
+| Variable         | Description                                | Default Value                                    |
+| ---------------- | ------------------------------------------ | ------------------------------------------------ |
+| `DATABASE_URL`   | URL for the PostgreSQL database connection | `ecto://postgres:postgres@database/cleaner_prod` |
+| `TELEGRAM_TOKEN` | Token for the Telegram bot                 |                                                  |
+| `OPENAI_URL`     | API endpoint for OpenAI services           | `https://api.openai.com/v1`                      |
+| `OPENAI_KEY`     | API key for OpenAI authentication          |                                                  |
 
-```elixir
-def deps do
-  [
-    {:cleaner, "~> 0.1.0"}
-  ]
-end
-```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/cleaner>.
+Ensure that all required variables are set before running the application.
 
