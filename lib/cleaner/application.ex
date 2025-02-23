@@ -7,7 +7,7 @@ defmodule Cleaner.Application do
 
   @impl Application
   def start(_type, _args) do
-    {:ok, _} = EctoBootMigration.migrate(@app)
+    {:ok, _resp} = EctoBootMigration.migrate(@app)
 
     token = Application.fetch_env!(@app, CleanerBot.Dispatcher)[:telegram_token]
 
