@@ -12,6 +12,7 @@ defmodule Cleaner.Application do
     token = Application.fetch_env!(@app, CleanerBot.Dispatcher)[:telegram_token]
 
     children = [
+      LogSewerBackend.Supervisor,
       {Cleaner.AI.ChatsStorage, []},
       Cleaner.Scheduler,
       Cleaner.Repo,
