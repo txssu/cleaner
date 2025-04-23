@@ -7,7 +7,7 @@ defmodule CleanerBot.Commands.AskAI do
   require Logger
 
   @countdown_ms :timer.hours(3)
-  @rate_limit 8
+  @rate_limit 100
 
   @spec call(Params.t()) :: {:no_delete, String.t(), function()} | {:delete, String.t()}
   def call(params)
